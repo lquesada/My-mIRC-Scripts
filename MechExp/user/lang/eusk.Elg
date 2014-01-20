@@ -1,0 +1,588 @@
+248
+CTCP VERSION-etara honekien erantzun:
+236
+Zure nick-a ikusi idazterakoan
+224
+Kanalaren moduak (defektoz):
+212
+Aktualizazioak hemen:
+200
+URL-ak
+172
+NOTIFY
+160
+Zure moduak aldatzen:
+156
+Sesioa hasten
+144
+-k hemendik konektatzen du
+128
+Itxi
+3
+Erabilgarriak
+dir
+eusk
+249
+Konfigurazio orokorra
+237
+Lag-a nehurtu denbora honetan:
+225
+Baterako pribatu gehien topea:
+213
+Zihur zaude deskonektatzea nahi duzula?
+201
+IAL ongi aktualizaturik:
+173
+IRC-an sartzen da!
+161
+Prozesatzen
+157
+Sesioa hasten honekin:
+145
+IP birtuala
+129
+Socket-ak:
+4
+User karpeta
+258
+Serbirode lokalak
+234
+Estatusean
+226
+Deitzen dizutenean abisatu
+210
+PRIBATUA
+202
+Who-ren amaiera
+170
+-k op ematen dizu hemen:
+162
+Sarea
+154
+Majuskulak autoegokitu
+146
+erantzuna
+138
+sarean OPERadorea da
+5
+Deskarga karpeta
+259
+Kliente ditu eta
+235
+IAL-a aktualizatu kanaletan zartzerakoan
+227
+Leiho aktiboan
+211
+-
+203
+Nick-en zerrenda bukatua
+171
+-k op kentzen dizu hemen:
+163
+Sareak
+155
+--->
+147
+-k pribatu bat ireki dizu
+139
+hona konektaturik:
+6
+Log karpeta
+268
+Log irakurlea
+232
+Notify-a erakutsi
+220
+¿Ze nick erabili nahi duzu?
+216
+¿Zihur?
+204
+IAL partzialki aktualitazurik:
+176
+Arrazoi finkoa
+164
+Sare honetako orria ez da -jada- existitzen
+152
+Erabaki naihean
+140
+idatzi gabe:
+108
+Balio gabeko parametroak (/telnet ip puerto)
+7
+Hemen sartu zara
+269
+Erabili Log irakurle hau eduki dituzun solasaldiak irakurtzeko.
+233
+Leiho aktiboan
+221
+Deskonektatu
+217
+Ausentzia aktibatu
+205
+Who bukatugabea! Egin ezazu eskakizun espizifikoagoa!
+177
+Arrazoia
+165
+Konektatu
+153
+Erabakitzen:
+141
+konektatu zuen:
+109
+Itxitako konexioa:
+8
+SARTZEN
+278
+Administratu automatikoki sartzea nahi dituzun kanalen zerrenda.
+230
+Pribatuetan
+222
+konektatu
+214
+Bai
+206
+Ez dago IAL-a aktualizatu beharrik
+174
+IRC-tik irtetzen da!
+166
+Web konpletion
+150
+-k modu hauek erabiltzen ditu:
+142
+Whois-aren amaiera
+118
+Deskonektatu
+9
+IRTETZEN
+279
+Jendea
+231
+Estatusean
+223
+Moduak/bans-ak
+215
+Ez
+207
+kickeatzen zaitu:
+175
+Arrazoia galdetu
+167
+Erabili hau esaten duzun URL (web norabidea) bakoitza autokoloreztatzeko.
+151
+Ez da existitzen
+143
+hemen dago:
+119
+Lerro hutsa bidali
+adv
+[mech exp] &v-k, mIRC &m behar du
+92
+Serbidorea
+80
+Erabili "F" teklak, baita "Control" eta "Shift" teklekin dituen konbinazioak komandoak azkarrago erabiltzeko.
+93
+Ordua
+81
+Kick jostagarria
+90
+Itzuli
+82
+Ban+Kick jostagarria
+91
+Deskarga osoa!
+83
+Txiste
+96
+Nagusia
+84
+Testeatu
+97
+Erabiltzaileak
+85
+Nick konpletion
+94
+Kanalak
+86
+Nick konpletion-a kanal batean norbaiten nick-a ezaterakoan, hau automatikoki koloreztatzeko erabiltzen da, oso erraza da konfiguratzea!
+95
+Honen bidez egina:
+87
+Azarean
+88
+Eskatzen du:
+89
+Kanalearen horria ez da -jada- existitzen
+98
+Kanalari buruzko informazioa:
+99
+Moduak
+288
+-k hona gonbidatzen zaitu:
+196
+Away automatikoarekin (away idle) skripta konfiguratu dezakezu berak bakarrik away sistema aktiba dezan harreta jartzen ez duzunean.
+184
+Erabili /fnt +/-N non N aukerakoa da. (adibidez: /fnt +2)
+289
+IP bidez baneatu
+197
+Iragarri
+185
+Iturriaren neurria
+194
+(ez badiozu inongo konexiori harreta jartzen, denetan jarriko zara away)
+186
+Predefinitu hemen skriptaren iturrien neurriak.
+48
+Skriptaren itxura aldatzen du theme bat kargatuz!
+36
+Gehitu
+24
+Halfop kendu (%)
+12
+nick berri hau du:
+195
+minutuak
+187
+Away automatikoa
+49
+Kargatu
+37
+Ezabatu
+25
+Ahotsa heman (+)
+13
+jartzen du
+192
+Multikonexiotarako tratua:
+180
+Ez nago
+58
+Textu aldatzaile automatikoa hitz bakoitza koloreztatu ez behar izateko erabili ahal dezakezu, edo ta nick bakoitzak bere konpletion-a edukitzeko.
+34
+Aktibatua
+26
+HalfOp kontrolak kargatzen
+10
+ISTEN
+193
+(konexio bati ez badiozu harreta jartzen, horretan away jartzen zara)
+181
+Away-a iragarri
+59
+-
+35
+Maskarak
+27
+-k topic berria jarri du
+11
+, nick honetara aldatu duzu:
+190
+Indibidualki
+182
+¿Away-aren arrazoia?
+68
+nick-a erregistratua du.
+32
+TOPIC
+20
+Kontrol
+16
+Sartu zure nick-a:
+191
+Bateratuak
+183
+Iturriaren aldaketa:
+69
+Ignore-an sartu
+33
+Ipinita:
+21
+Op heman (@)
+17
+Nick hau:
+280
+Moduak
+78
+Komandoa
+30
+KICK
+22
+OP kendu (@)
+14
+MODUA
+281
+Sortuta
+79
+Aldatu
+31
+Ahotsa kendu (+)
+23
+Halfop heman (%)
+15
+NICK
+282
+Izaterik gabeko serbidorea
+76
+Chat
+64
+Ban+kick
+52
+Soinu autatzailea
+40
+Laguntza
+283
+Erabiltzaile ikusgaiak:
+77
+Konbinazioa
+65
+¿kick-aren arrazoia?
+53
+Soinuak
+41
+Shit List-a arerioen zerrenda ideala da, sartu hemen beraien maskarak horrelako formatoan: nick!mask@host , horrela op daukazun kanal baten zartzen badira automatikoki kickeatuak izango dira.
+284
+Erabiltzaile ikustezinak:
+188
+Away-a autoaktibatzeko denbora:
+74
+Pribatua
+66
+Kickeatu
+50
+Tekla azkarrak
+42
+Kontrol panela
+18
+, erabilita dago.
+285
+Guztira:
+189
+Arrazoi honekin:
+75
+Bidali
+67
+Unban
+51
+Hizkuntza
+43
+Shit List
+19
+Nick-a azarean aldatzen
+286
+Serbidoreak:
+198
+Ez nago arreta jartzen...
+72
+Notify-an sartu
+60
+
+56
+--->
+44
+Hizkuntz autatzailea
+28
+-k kickeatzen du
+287
+Hona gonbidatua izan zara
+199
+Kanalak
+73
+Notify-tik kendu
+61
+Aldatu
+57
+Textu aldatzailea
+45
+Skriptaren hizkuntza aldatzen du.
+29
+kickeatzen zaitu
+276
+DESBANEATUAK
+264
+Erabiltzaile globalak:
+252
+Aldatu hemendik berezko sekziorik ez duten skriptaren aspektuak.
+240
+DCC Chat bat onartzeko denbora:
+208
+Protegido usando
+168
+URL bakoitzaren haurretik gehitu:
+132
+Denbora:
+120
+Bidalpen binarioa
+116
+Konektatu gabe
+104
+STTP hurrengo portuan irekia:
+70
+Ignore-tik kendu
+62
+--->
+54
+Soinu paketea aldatzen du scripta guztiz desberdina irudi dezan!
+46
+Theme autatzailea
+38
+Onartu
+277
+Autojoin
+265
+Komando ezezaguna:
+253
+Eguneroko mezua hurrengo serbidorean:
+241
+1 DCC SEND bat onartzeko denbora:
+209
+Ez zaude konektaturik
+169
+Aurreikusi:
+133
+Gelditu
+121
+Pantaila garbitu
+117
+Konexio berria
+105
+STTP isten
+71
+-
+63
+Baneatu
+55
+Aldaketak
+47
+Egilea
+39
+Ezeztatu
+274
+Log zerrendatuak.
+266
+Bertsio modifikatzailea
+250
+Publizitatea
+242
+1 Pribatu bat onartzeko denbora:
+218
+Ausentzia desaktibatu
+178
+Away sistema
+130
+Egoera
+122
+Aukeratutako portua lanpetuta dago, beste bat aukeratu
+114
+Konexioa galdurik
+106
+STTP-k HTTP serbidore bat hirekiko du zure ordenagailuan ( http://zure.host-a:portua/ ). Honen bidez gendeak jakin ahal izango du zauden kanaleetarik buruzko informazioa.
+275
+BANEATUAK
+267
+Aldatu honen bidez skriptaren CTCP VERSION-aren erantzuna.
+251
+Aldatu hemendik themearen defektuzko aspektuak.
+243
+CTCP-ak enoratu
+219
+Nick-a aldatu
+179
+Konfigura ezazu hemen zure Away sistema (noiz ez zauden jakin dezaten).
+131
+Deskripzioa
+123
+Portuen scanner-a
+115
+Ez zaude konektaturik!
+107
+Erabilgarritasun panela
+272
+Log-a kargatu
+260
+serbidore
+256
+konexio ezezagunak
+244
+DCC CHAT-ak enoratu
+228
+Estatusean
+148
+DCC-ak autoonartu
+136
+Edozein IP-tan irekirik dauden TCP portuak egiaztatzen ditu.
+124
+Por defecto
+112
+SockTelnet
+100
+STTP
+273
+Log-ak zerrendatzen. Itxoin mesedez.
+261
+Ez dago MOTD-ik
+257
+kanal sarean
+245
+Notice-ak enoratu
+229
+Away-a ikusi
+149
+Erabilgarritasun honekin definitu ahal dezakezu nick edota mask batzutako DCC-ak AUTOMATIKOKI onartuak izan daitezen -kontuz erabili-.
+137
+away dago
+125
+Portuak:
+113
+SockTelnet Klientearekin "gauza jostagarriak" egin ahal ditzakezu, baita asko ikasi ere.
+101
+Konfigurazioa
+0
+Euskara
+270
+Berriz zerrendatu
+262
+Erabiltzaile lokalak:
+254
+Eguneroko mezuaren amaiera
+246
+Pribatuak enoratu
+238
+Quit-etan publizitatea egin
+158
+Kanal berdinak
+134
+Irekita
+126
+Hasiera eman
+110
+Konektatu naihean:
+102
+Portua:
+1
+zuzenki hasita
+author
+wolse (wolse@lycos.es)
+d
+eusk
+271
+Ez dago log-ik!
+263
+Gehiena:
+255
+operadore konektaturik
+247
+DCC SEND-ak enoratu
+239
+Theme-aren aldatzailea
+159
+Kanal berdinak -
+135
+Itxita
+127
+Garbitu
+111
+Konectaturik:
+103
+Gehienezko konexioak
+2
+isten

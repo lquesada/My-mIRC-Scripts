@@ -1,0 +1,1214 @@
+;[Mech Exp] by LZ
+
+
+;// START EXIT CONNECT DISCONNECT
+alias _script return 1
+alias _mech_exp_start {
+  _chrg 0
+  dll sys\dll\dmu.dll MircIcon mexp.ico
+  if ($window(-2).state == tray) showmirc -r
+  _chrg 5
+  _htable 100 cfg $iif($isfile(user\config\primary.Ecf),user\config\primary.Ecf)
+  if (!$isfile(user\config\primary.Ecf)) write user\config\primary.Ecf
+  _chrg 10
+  _htable 100 shitlist $iif($isfile(user\config\shitlist.Ecf),user\config\shitlist.Ecf)
+  if (!$isfile(user\config\shitlist.Ecf)) write user\config\shitlist.Ecf
+  _chrg 15
+  _htable 100 autojoin $iif($isfile(user\config\autojoin.Ecf),user\config\autojoin.Ecf)
+  if (!$isfile(user\config\autojoin.Ecf)) write user\config\autojoin.Ecf
+  _chrg 20
+  _htable 100 replace $iif($isfile(user\config\replace.Ecf),user\config\replace.Ecf)
+  if (!$isfile(user\config\replace.Ecf)) write user\config\replace.Ecf
+  _htable 100 thememod $iif($isfile(user\config\thememod.Ecf),user\config\thememod.Ecf)
+  if (!$isfile(user\config\thememod.Ecf)) write user\config\thememod.Ecf
+  _chrg 25
+  if (!$isfile(servers.ini)) && ($isfile(sys\servers.sec)) .copy sys\servers.sec servers.ini
+  if (!$isdir(temp)) mkdir temp
+  _chrg 30
+  hmake tmp 100
+  hmake sttpd 100
+  _chrg 35
+  _loadtheme
+  _chrg 40
+  if ($_cfgret(nick)) .nick $ifmatch
+  if ((!$_devel) && (!$_cfgret(start)) && (!$_cfgret(start))) {
+    _cfgset startlang 1
+    _cfgset verreply [Mech Exp] &v, LZ &w
+    var %x = $dialog(langsel,langsel,-2)
+    _changetheme mech
+  }
+  else _start
+}
+alias _start {
+  _loadlang
+  _chrg 45
+  _loadsounds
+  _chrg 50
+  _snd s
+  _set active $active
+  _set cid $cid
+  _chrg 55
+  _statbar
+  _chrg 60
+  _title
+  dll sys\dll\motfv3.dll motfv Load
+  _chrg 65
+  .timer 1 0 _pnick
+  _chrg 70
+  _set cid $cid
+  _chrg 75
+  _sttprun
+  if (!$_devel) {
+    var %xaxa
+    if ($isfile(temp\new.cfg)) {
+      if ($read(temp\new.cfg,n,1) != +OK) {
+        .remove temp\new.cfg
+        write temp\new.cfg +OK
+        var %xaxa 1
+      }
+    }
+    else {
+      write temp\new.cfg +OK
+      var %xaxa 1
+    }
+    if ($_cfgret(lastv) != $_v) || (%xaxa) {
+      .username $_w
+      if ($isfile(user\config\notify.Ecf)) _snotr
+      _cfgset lastv $_v
+    }
+  }
+  _chrg 80
+  _th.conn
+  .timestamp -f $replace($£(t),&t,$£(i))
+  .timestamp -s on
+  _chrg 90
+  _set collbox $color(listbox)
+  _set collbtx $color(listbox text)
+  _chrg 95
+  _set awid $ctime
+  scid -a _loadindt s
+  !echo $color(normal) -s Mech Exp $_v $ø(1) $+ .
+  !echo $color(normal) -s LZ '2001-2002
+  !echo $color(normal) -s $ø(212) $_w
+  !echo $color(normal) -s -
+  !echo $color(normal) -s mIRC $+ $version (c) Khaled Mardam-Bey (12www.mirc.com)
+  _chrg 99
+  !echo $color(normal) -s Lang: $+(',$ø(0),' $ø(155) ',$ø(Author),')
+  !echo $color(normal) -s Theme: $+(',$£(0),' $ø(155) ',$£(Author),')
+  !echo $color(normal) -s Sounds: $+(',$hget(sounds,0),' $ø(155) ',$hget(sounds,Author),')
+  !echo $color(normal) -s -
+  !echo $color(normal) -s $£(1)
+  _chrg 100
+  _cfgsave
+}
+alias _pnick {
+  if ((!$_devel) && (!$_cfgret(start))) {
+    if ($_cfgret(nick)) .nick $ifmatch
+    else {
+      if ($input($ø(16),qe)) .nick $ifmatch
+      else .nick mech_ $+ $rand(a,z) $+ $rand(a,z) $+ $rand(a,z)
+    }
+    _cfgset start 1
+  }
+}
+on *:CONNECT:{
+  _e
+  _set awid. $+ $cid $ctime
+  _set con. $+ $cid 1
+  _snd c
+  _midelag
+  _th.conn
+  _set conn. $+ $cid 1
+  if ($_ret(awstt. $+ $cid)) _setawayON r
+  dll sys\dll\motfv3.dll motfv Sync
+  if ($_cfgret(autojoin)) {
+    var %x 3
+    var %y 1
+    while ($hget(autojoin,%y).item) { 
+      .timer 1 %x j $ifmatch
+      inc %x 3
+      inc %y
+    }
+  }
+}
+on *:DISCONNECT:{
+  _e
+  hdel -w sttpd $cid $+ _*
+  hdel -w tmp hraw_ $+ $cid $+ _*
+  hdel -w tmp lastial*
+  hdel -w tmp ial.*
+  _set con. $+ $cid 0 | _snd d | _th.conn | _del hop. $+ $cid | _del conn. $+ $cid
+  _del awid. $+ $cid
+  _del awist. $+ $cid
+  if ($_cfgret(nick)) .nick $ifmatch
+}
+on *:ACTIVE:*:{
+  _e
+  if ($active != @_bar) {
+    if ($_ret(cid) != $cid) {
+      _set cid $cid
+      _actbars
+      if (!$_ret(awid. $+ $cid)) _set awid. $+ $cid $ctime
+    }
+    if ($_ret(active) != $active) {
+      _set active $active
+    }
+  }
+}
+alias _actbars {
+  _idle2s $1-
+  _th.conn $1-
+  _awaybutact $1-
+}
+
+
+;// Toolbar
+menu @_bar {
+  sclick:_stbarclick
+  dclick:_stbarclick
+}
+alias _stbarclick {
+  var %z $_ret(active)
+  if (* * iswm %z) var %z = $+(",%z,")
+  scid $_ret(cid) window -a %z
+  var %mouse.x = $mouse.x,%mouse.y = $mouse.y
+  var %x = 0
+  while (%x <= $hfind(theme,coms.*, 0,w)) {
+    var %y = $£($hfind(theme,coms.*, %x,w))
+    if ((%mouse.x >= $gettok(%y,1,255)) && (%mouse.x <= $gettok(%y,2,255)) && (%mouse.y >= $gettok(%y,3,255)) && (%mouse.y <= $gettok(%y,4,255))) {
+      scid $_ret(cid) $gettok(%y,5,255)
+      if ((*server -n* !iswm $gettok(%y,5,255)) && (*server -m* !iswm $gettok(%y,5,255))) scid $_ret(cid) window -a %z
+      return
+    }
+    inc %x
+  }
+  if ((!$£(coms.-1)) && (%mouse.x >= 2) && (%mouse.x <= 30) && (%mouse.y >= 4) && (%mouse.y <= 24)) connection
+}
+alias _statbar {
+  if (%bardid) return
+  set -u0 %bardid 1
+  if ($window(@_bar)) {
+    var %b = 1
+    if ($window(@_oldbar)) window -c @_oldbar
+    renwin @_bar @_oldbar
+  }
+  else var %b = 0
+  window -pkrBh +ld @_bar 0 0 $calc($window(-2).w -2) 30 @_bar
+  drawpic -nls @_bar 0 0 $window(-3).w 30 $_th.fill
+  drawpic -n @_bar 0 0 $_th.bar
+  drawrect -frn @_bar $_lagco(border1) 1 $calc(0 + $_th.lagb) $calc(0 + $_th.lagc) 100 19
+  drawrect -rn @_bar $_lagco(border2) 1 $calc(1 + $_th.lagb) $calc(1 + $_th.lagc) 98 17
+  drawdot @_bar
+  _set winbar $window(@_bar).w
+  _actbars f $1
+  .timer_idle2s -io 0 2 _idle2s
+  _idle2s 0 $1
+  dll sys\dll\dmu.dll BarAdd toolbar > @_bar
+  if (%b) {
+    window -c @_oldbar
+  }
+}
+alias -l _lagco {
+  if ($1 == border1) return $iif($£(lagco.border1) != $null,$ifmatch,0)
+  if ($1 == border2) return $iif($£(lagco.border2) != $null,$ifmatch,8355711)
+  if ($1 == back) return $iif($£(lagco.back) != $null,$ifmatch,0)
+  if ($1 == text) return $iif($£(lagco.text) != $null,$ifmatch,13158600)
+}
+alias -l _bcheck if (($mouse.x >= $1) && ($mouse.y >= $2) && ($mouse.x <= $3) && ($mouse.y <= $4)) return 1
+alias _quitaawayidle {
+  if ($1 == t) scid -at1 _quitateawayidle
+  if ($1 == 1) _quitateawayidle 1
+}
+alias _ponawayidle {
+  if ($1 == t) scid -at1 _ponteawayidle
+  if ($1 == 1) _ponteawayidle 1
+}
+alias _quitateawayidle {
+  if ((!$_ret(awstt. $+ $cid)) && ($_ret(awist. $+ $cid)) && ($_ret(conn. $+ $cid)) && ($status == connected)) {
+    if (($1 == 1) && ($calc($ctime - $_ret(awid. $+ $cid)) < $calc(60* $_awayidletime)) || (!$1)) {
+      _del awist. $+ $cid
+      away
+      if ($_awayidleanun) ame $_awy(OFF,$_awayidlemotv)
+    }
+  }
+}
+alias _ponteawayidle {
+  if ((!$_ret(awstt. $+ $cid)) && (!$_ret(awist. $+ $cid)) && ($_ret(conn. $+ $cid)) && ($status == connected)) {
+    if (($1 == 1) && ($calc($ctime - $_ret(awid. $+ $cid)) >= $calc(60* $_awayidletime)) || (!$1)) {
+      _set awist. $+ $cid 1
+      away $_awayidlemotv
+      if ($_awayidleanun) ame $_awy(ON,$_awayidlemotv)
+    }
+  }
+}
+alias _idle2s {
+  if ((!$window(@_bar)) || (!$window(@_bar).y)) _statbar
+  if ($_awayidleunifs) {
+    if ($calc($ctime - $_ret(awid)) >= $calc(60* $_awayidletime)) {
+      if ($_awayidlest) _ponawayidle t
+    }
+    else _quitaawayidle t
+  }
+  else {
+    if ($_awayidlest) scid -at1 _ponawayidle 1
+    scid -at1 _quitaawayidle 1
+  }
+  if ($window(-2).w $window(-2).h != $_ret(resolucion)) { 
+    _set resolucion $window(-2).w $window(-2).h  
+    _statbar
+  }
+  _drbar $1
+  if (($_ret(autosav) >= 150) || ($_ret(autosav) !isnum) || ($_ret(autosav) < 0)) {
+    _saveall
+    _snotf
+    _set autosav 0
+  }
+  else _set autosav $calc($_ret(autosav) + 1)
+}
+alias _drbar {
+  if (!$window(@_bar)) return
+  _laggen
+  _set lag $_rnd3c($_ret(lag))
+  if (($_ret(lag) < 1) && ($_ret(lag) isnum)) _set lag < 1 sec
+  else if ($_ret(lag) != n/a) _set lag $ifmatch secs
+  if (($_ret(lag) != $_ret(laghist)) || ($1 == f)) {
+    drawrect -frn @_bar $_lagco(back) 1 $calc(2 + $_th.lagb) $calc(2 + $_th.lagc) 96 15
+    drawtext -crn @_bar $_lagco(text) Verdana 10 $calc(4 + $_th.lagb) $calc(3 + $_th.lagc) 93 14 Lag: $_ret(lag)
+    drawdot @_bar
+    _set laghist $_ret(lag)
+  }
+  _th.conn
+  _awaybutact
+  if (($_ret(collbox) != $color(listbox)) || ($_ret(collbtx) != $color(listbox text))) {
+    _set collbox $color(listbox)
+    _set collbtx $color(listbox text)
+  }
+}
+alias -l _laggen _set lag $iif(($_ret(lastlag. $+ $cid)) && ($server) && ($_ret(conn. $+ $cid)),$iif($calc(($ticks - $_ret(lastlag. $+ $cid))) >= 0,$calc($ifmatch /1000),0),n/a)
+alias -l _rnd3c return $left($iif(. !isin $1,$1 $+ .,$1) $+ 000,$calc($pos($1,.,1) +3))
+
+
+;// Panel de control
+alias cpanel _dialog cpanel d
+alias _mdx return $dll(sys\dll\mdx.dll,$1,$2-)
+alias _cpadd {
+  did -i cpanel 8 1 seticon list 0 sys\ico\ $+ $gettok($2-,1,1)
+  did -a cpanel 8 $1 + $1 0 0 $ø($gettok($2-,3,1))
+}
+dialog cpanel {
+  option pixel
+  size -1 -1 400 262
+  icon sys\ico\Config.ico
+  title $ø(42)
+  button ,1,-50 -50 -50 -50,ok
+  list 8, 0 0 400 225
+  edit ,9, 0 212 400 50,read,multi
+}
+on *:DIALOG:cpanel:init:*:{
+  _mdx SetMircVersion $version
+  _mdx MarkDialog cpanel
+  _mdx SetControlMDX cpanel 8 listview extsel icon single > sys\dll\views.mdx
+  var %x = 1
+  while ($read(sys\res\cpanel.Ers,n,%x)) {
+    _cpadd %x $ifmatch
+    inc %x
+  }
+}
+on *:DIALOG:cpanel:*:8:{
+  if ($devent isin sclickdclick) {
+    if ($did(cpanel,8).sel) { 
+      var %x = $read(sys\res\cpanel.Ers,n,$calc($did(cpanel,8).sel -1)))
+      if ($devent == sclick) did -ra cpanel 9 $ø($gettok(%x,4,1))
+      if ($devent == dclick) $gettok(%x,2,1)
+    }
+  }
+}
+on *:DIALOG:cpanel:sclick:1:{
+  if ($did(cpanel,8).sel) { 
+    var %x = $read(sys\res\cpanel.Ers,n,$calc($did(cpanel,8).sel -1)))
+    $gettok(%x,2,1)
+  }
+  halt
+}
+
+
+;// Panel de Utilidades
+alias upanel _dialog upanel d
+alias _upadd {
+  did -i upanel 8 1 seticon list 0 sys\ico\ $+ $gettok($2-,1,1)
+  did -a upanel 8 $1 + $1 0 0 $ø($gettok($2-,3,1))
+}
+dialog upanel {
+  option pixel
+  size -1 -1 400 262
+  icon sys\ico\Utils.ico
+  title $ø(107)
+  button ,1,-50 -50 -50 -50,ok
+  list 8, 0 0 400 225
+  edit ,9, 0 212 400 50,read,multi
+}
+on *:DIALOG:upanel:init:*:{
+  _mdx SetMircVersion $version
+  _mdx MarkDialog upanel
+  _mdx SetControlMDX upanel 8 listview extsel icon single > sys\dll\views.mdx
+  var %x = 1
+  while ($read(sys\res\upanel.Ers,n,%x)) {
+    _upadd %x $ifmatch
+    inc %x
+  }
+}
+on *:DIALOG:upanel:*:8:{
+  if ($devent isin sclickdclick) {
+    if ($did(upanel,8).sel) { 
+      var %x = $read(sys\res\upanel.Ers,n,$calc($did(upanel,8).sel -1)))
+      if ($devent == sclick) did -ra upanel 9 $ø($gettok(%x,4,1))
+      if ($devent == dclick) $gettok(%x,2,1)
+    }
+  }
+}
+on *:DIALOG:upanel:sclick:1:{
+  if ($did(upanel,8).sel) { 
+    var %x = $read(sys\res\upanel.Ers,n,$calc($did(upanel,8).sel -1)))
+    $gettok(%x,2,1)
+  }
+  halt
+}
+
+
+;// Selector de idiomas
+alias _langsel _dialog langsel d
+alias _tmpl {
+  if ($1 == 1) return $iif($_cfgret(l),$ø(49),OK)
+  if ($1 == 2) return $iif($_cfgret(l),$ø(39),Cancel)
+
+}
+dialog langsel {
+  option pixel
+  size -1 -1 418 220
+  title $iif($_cfgret(l),$ø(44),LangSel)
+  icon sys\ico\Idiomas.ico
+  list 8,0 0 418 199
+  button $_tmpl(1),9,17 190 142 29,ok
+  button $_tmpl(2),10,258 190 142 29,cancel
+}
+on *:DIALOG:LangSel:init:0:{
+  _mdx SetMircVersion $version
+  _mdx MarkDialog langsel
+  _mdx SetControlMDX langsel 8 listview rowselect grid showsel single headerdrag report > sys\dll\views.mdx
+  did -i langsel 8 1 headerdims 160:1 238:2 0:3
+  did -i langsel 8 1 headertext + 0 $iif($_cfgret(l),$ø(51),Lang) 	  $iif($_cfgret(l),$ø(47),Author) 	.
+  var %x = $findfile(user\lang,*.Elg,0,0,_showlang $shortfn($1-))
+  did -cf langsel 8 $iif($_cfgret(startlang),$didwm(Langsel,8,0 + 0 0 0 Español*,1),$didwm(Langsel,8,$+(0 + 0 0 0 $hget(lang,0),*),1))
+}
+on *:DIALOG:LangSel:sclick:9:{
+  _changelang $gettok($gettok($did(langsel,8).seltext,3,9),5-,32) | if ($_cfgret(startlang)) { _start | _cfgset startlang 0 }
+  _cfgsave
+}
+on *:DIALOG:LangSel:sclick:10:{
+  if ($_cfgret(startlang)) { 
+    _changelang $$gettok($did(8).seltext,$numtok($did(8).seltext,9),9)
+    _start
+    _cfgset startlang 0
+    _cfgsave
+  }
+}
+alias _showlang {
+  hmake clang 100
+  hload clang $1-
+  did -i langsel 8 2 $hget(clang,0) 	 $hget(clang,Author) 	 $nopath($1-)
+  hfree clang
+}
+
+
+;// Selector de themes
+alias _themesel _dialog themesel d
+dialog themesel {
+  title $ø(46)
+  size -1 -1 418 427
+  option pixels
+  icon sys\ico\Themes.ico, 0
+  list 8, 0 205 418 199
+  button ,20,-5 -5 0 0,ok
+  button $ø(49), 9, 17 395 142 29
+  button $ø(128), 10, 258 395 142 29, cancel
+  icon 1, 13 27 392 169
+  text $ø(169), 2, 6 2 247 16
+}
+on *:DIALOG:ThemeSel:init:0:{
+  _mdx SetMircVersion $version
+  _mdx MarkDialog themesel
+  _mdx SetControlMDX themesel 8 listview rowselect grid showsel single headerdrag report > sys\dll\views.mdx
+  did -i themesel 8 1 headerdims 160:1 238:2 0:3
+  did -i themesel 8 1 headertext + 0 Theme 	 $ø(47) 	.
+  var %x = $findfile(user\theme,*.Etm,0,0,_showtheme $shortfn($1-))
+  did -cf themesel 8 $didwm(themesel,8,$+(0 + 0 0 0 $iif($£(0),$ifmatch,Mech),*),1)
+  _themepreview
+}
+on *:DIALOG:themesel:sclick:8:_themepreview
+on *:DIALOG:themeSel:sclick:9,20:{
+  if ($gettok($gettok($did(themesel,8).seltext,3,9),5-,32)) { _changetheme $gettok($gettok($did(themesel,8).seltext,3,9),5-,32) }
+}
+alias _showtheme {
+  hmake ctheme 100
+  hload ctheme $1-
+  did -i themesel 8 2 $hget(ctheme,0) 	 $hget(ctheme,Author) 	 $nopath($1-)
+  hfree ctheme
+}
+
+
+;// Selector de sonidos
+alias _soundssel _dialog soundssel d
+dialog soundssel {
+  option pixel
+  size -1 -1 418 220
+  title $ø(52)
+  icon sys\ico\Sonidos.ico
+  list 8,0 0 418 199
+  button $ø(49),9,17 190 142 29,ok
+  button $ø(39),10,258 190 142 29,cancel
+}
+on *:DIALOG:soundsSel:init:0:{
+  _mdx SetMircVersion $version
+  _mdx MarkDialog soundssel
+  _mdx SetControlMDX soundssel 8 listview rowselect grid showsel single headerdrag report > sys\dll\views.mdx
+  did -i soundssel 8 1 headerdims 160:1 238:2 0:3
+  did -i soundssel 8 1 headertext + 0 $ø(53) 	 $ø(47) 	.
+  var %x = $findfile(user\sounds,*.Esd,0,0,_showsounds $shortfn($1-))
+  did -cf soundssel 8 $didwm(soundssel,8,$+(0 + 0 0 0 $iif($hget(sounds,0),$ifmatch,mech),*),1)
+}
+on *:DIALOG:soundsSel:sclick:9:_changesounds $gettok($gettok($did(soundssel,8).seltext,3,9),5-,32) | _cfgsave
+alias _showsounds {
+  hmake csounds 100
+  hload csounds $1-
+  did -i soundssel 8 2 $hget(csounds,0) 	 $hget(csounds,Author) 	 $nopath($1-)
+  hfree csounds
+}
+
+;// INVITE TEXT JOIN PART QUIT NICK RAWMODE INPUT TOPIC KICK ACTION NOTICE DNS CHAT CTCP CTCPREPLY USERMODE OP DEOP
+raw 341:*:echo $color(invite) -se $Ø($£(97),0,$2,$3,$ø(287)) | haltdef
+on ^*:INVITE:*:echo $color(invite) -se $Ø($£(98),0,$nick,#,$ø(288)) | haltdef
+alias _mnick {
+  if ($nick isop #) return @
+  if ($nick ishop #) return %
+  if ($nick isvo #) return +
+}
+on ^*:TEXT:*:#:{
+  _e
+  var %x $_sttpdin($cid,#,$nick,$strip($1-))
+  if ($me isin $strip($1-)) {
+    if ($window(#)) window -g2 #
+    echo $color(text) # $Ø($£(3),0,$_mnick) $+  $_st($1-)
+    var %x = $Ø($£(4)) $left($replace($strip($1-),$me,$Ø($£(5))),500)
+    var %x1 = $Ø($£(78),0,$scid($cid).network) $left($replace($strip($1-),$me,$Ø($£(5))),500)
+    if ($activecid != $cid) {
+      scid $activecid __echo $color(highlight) $iif($chr(32) isin $active,-s,-ga) %x1
+      scid $cid echo $color(highlight) -s %x
+    }
+    elseif ($active != #) __echo $color(highlight) $iif($chr(32) isin $active,-s,-ga) %x
+    if ($line(Status Window,$line(Status Window,0)) != %x) echo $color(highlight) -s %x
+    if (!$_ret(snd.y)) { _set snd.y 1 | .timer -io 1 5 _del snd.y | _snd y }
+    haltdef
+    return
+  }
+  echo $color(text) # $Ø($£(2),0,$_mnick) $+  $_st($1-)
+  haltdef
+}
+
+on ^*:TEXT:*:?:{
+  _e
+  if ($me isin $strip($1-)) {
+    if ($window($nick)) window -g2 $nick
+    echo $color(text) $nick $Ø($£(3)) $+  $_st($1-)
+    var %x = $Ø($£(6)) $left($replace($strip($1-),$me,$Ø($£(5))),500)
+    var %x1 = $Ø($£(79),0,$scid($cid).network)) $left($replace($strip($1-),$me,$Ø($£(5))),500)
+    if ($activecid != $cid) {
+      scid $activecid __echo $color(highlight) $iif($chr(32) isin $active,-s,-ga) %x1
+      scid $cid echo $color(highlight) -s %x
+    }
+    elseif ($active != $nick) __echo $color(highlight) $iif($chr(32) isin $active,-s,-ga) %x
+    if ($line(Status Window,$line(Status Window,0)) != %x) echo $color(highlight) -s %x
+    if (!$_ret(snd.y)) { _set snd.y 1 | .timer -io 1 5 _del snd.y | _snd y }
+    haltdef
+    return
+  }
+  echo $color(text) $nick $Ø($£(2)) $+  $_st($1-)
+  haltdef
+}
+on ^*:NOTICE:*:#:{
+  _e
+  echo $color(notice) # $Ø($£(24),0,$target,$_st($1-))
+  haltdef
+}
+on ^*:NOTICE:*:?:{
+  _e
+  var %x = $Ø($£(25),0,$_st($1-))
+  _ccecho $color(notice) $nick %x
+  if ($query($nick)) echo $color(notice) $nick %x
+  if (!$comchan($nick,0)) echo $color(notice) -s %x
+  haltdef
+}
+on *:CTCPREPLY:*:{
+  _e
+  if (($1 = PING) && ($2 isnum)) tokenize 32 $1 $duration($calc($ctime - $2)) $3-
+  if ($me ison $target) {
+    var %x = $Ø($£(47),0,$target,$_st($1),$_st($2-),$ø(146))
+    echo $color(ctcp) # %x
+    echo $color(ctcp) -s %x
+  }
+  else {
+    echo $color(ctcp) -s $Ø($£(48),0,$_st($1),$_st($2-),$ø(146))
+  }
+  haltdef
+}
+CTCP ^*:*:#:{
+  _e
+  if ($1 == MOTFV) tokenize 32 VERSION $2-
+  var %x = $Ø($£(43),0,$target,$_st($1),$_st($2-))
+  echo $color(ctcp) # %x
+  echo $color(ctcp) -s %x
+  if ($1 == VERSION) {
+    if (!$_ret(vreply)) {
+      if ($_vreply($nick)) {
+        _set vreply 1
+        .ctcpreply $nick VERSION $ifmatch
+      }
+      .timer -io 1 5 _del vreply
+    }
+    haltdef
+    halt
+  }
+  if ($1 != DCC) { 
+    haltdef
+    halt
+  }
+  else haltdef
+}
+CTCP ^*:*:?:{
+  _e
+  if ($1 == MOTFV) tokenize 32 VERSION $2-
+  echo $color(ctcp) -s $Ø($£(44),0,$_st($1),$_st($2-)))
+  if ($1 == VERSION) {
+    if (!$_ret(vreply)) {
+      if ($_vreply($nick)) {
+        _set vreply 1
+        .ctcpreply $nick VERSION $ifmatch
+      }
+      .timer -io 1 5 _del vreply
+    }
+    haltdef
+    halt
+  }
+  if ($1 != DCC) {
+    haltdef
+    halt
+  }
+  elseif ($2 == SEND) {
+    if (!$_ret(dccsound)) {
+      _snd f
+      _set dccsound 1
+      .timer -io 1 5 _del dccsound
+    }
+  }
+  elseif (($2 != CHAT) && ($2 != RESUME)) haltdef
+}
+on ^*:NOTICE:*:?:{
+  _e
+  var %x = $Ø($£(25),0,$_st($1-))
+  _ccecho $color(notice) $nick %x
+  if ($query($nick)) echo $color(notice) $nick %x
+  if (!$comchan($nick,0)) echo $color(notice) -s %x
+  haltdef
+}
+alias _qlimit return $iif(($_cfgret(qlimit) isnum) && (. !isin $_cfgret(qlimit)) && ($_cfgret(nodefs_1)),$_cfgret(qlimit),10)
+on ^*:OPEN:?:*:{
+  _e
+  if (($query(0) >= $_qlimit) && ($_cfgret(qlimits))) {
+    if ($me isin $strip($1-)) {
+      echo $color(text) -s $Ø($£(3)) $+  $_st($1-)
+      var %x1 = $Ø4($£(78),0,$scid($cid).network) $left($replace($strip($1-),$me,$Ø($£(5))),500)
+      if ($activecid != $cid) {
+        scid $activecid __echo $color(highlight) $iif($chr(32) isin $active,-s,-ga) %x1
+      }
+      elseif ($active != $nick) __echo $color(highlight) $iif($chr(32) isin $active,-s,-ga) %x1
+      if (!$_ret(snd.y)) { _set snd.y 1 | .timer -io 1 5 _del snd.y | _snd y }
+      halt
+    }
+    echo $color(text) -s $Ø($£(2)) $+  $_st($1-)
+    haltdef
+  }
+  else {
+    var %x $iif((($chr(32) isin $active) && (Stat isin $active)),-s,-ga) $Ø($£(72),0,$ø(147),$ø(210),$scid($cid).network)
+    if ($activecid != $cid) {
+      scid $activecid echo $color(highlight) %x
+    }
+    var %x $Ø($£(49),0,$ø(147),$ø(210))
+    elseif ($active != $nick) __echo $color(highlight) $iif((($chr(32) isin $active) && (Stat isin $active)),-s,-ga) %x
+    if ($line(Status Window,$line(Status Window,0)) != %x) echo $color(highlight) -s %x
+    if (!$_ret(qsound)) {
+      _snd q
+      _set qsound 1
+      .timer -io 1 5 _del qsound
+    }
+    flash $ø(210)
+  }
+}
+on *:OPEN:?:*:{
+  _e
+  if ($window($nick)) {
+    _loadlg $nick
+    echo $color(highlight) $nick $Ø3($£(50),0,$ø(156),$ø(157),$nick,$address)
+    var %tmp 1
+    var %tmp.
+    while ((%tmp <= $comchan($nick,0)) && ($len(%tmp) <= 600)) { 
+      if ($nick isop $comchan($nick,%tmp)) var %tmp. = %tmp. @ $+ $comchan($nick,%tmp) 
+      elseif ($nick ishop $comchan($nick,%tmp)) var %tmp. = %tmp. % $+ $comchan($nick,%tmp) 
+      elseif ($nick isvo $comchan($nick,%tmp)) var %tmp. = %tmp. + $+ $comchan($nick,%tmp) 
+      else var %tmp. = %tmp. $comchan($nick,%tmp) 
+      inc %tmp 
+    }
+    echo $color(highlight) $nick $Ø($£(51),0,$ø(158),$ø(159),%tmp.,$comchan($nick,0))
+  }
+}
+
+on ^*:ACTION:*:#:{
+  _e
+  if ($me isin $strip($1-)) {
+    if ($window(#)) window -g2 #
+    echo $color(action) # $Ø($£(23),0,$nick,$_st($1-))
+    var %x = $Ø($£(4)) $left($replace($strip($1-),$me,$Ø($£(5))),500)
+    var %x1 = $Ø($£(78),0,$scid($cid).network) $left($replace($strip($1-),$me,$Ø($£(5))),500)
+    if ($activecid != $cid) {
+      scid $activecid __echo $color(highlight) $iif($chr(32) isin $active,-s,-ga) %x1
+      scid $cid echo $color(highlight) -s %x
+    }
+    elseif ($active != #) __echo $color(highlight) $iif($chr(32) isin $active,-s,-ga) %x
+    if ($line(Status Window,$line(Status Window,0)) != %x) echo $color(highlight) -s %x
+    if (!$_ret(snd.y)) { _set snd.y 1 | .timer -io 1 5 _del snd.y | _snd y }
+    haltdef
+    return
+  }
+  echo $color(action) # $Ø($£(22),0,$nick,$_st($1-))
+  haltdef
+}
+
+on ^*:ACTION:*:?:{
+  _e
+  if ($me isin $strip($1-)) {
+    if ($window($nick)) window -g2 $nick
+    echo $color(action) $nick $Ø($£(23),0,$nick,$_st($1-))
+    var %x = $Ø($£(6)) $left($replace($strip($1-),$me,$Ø($£(5))),500)
+    var %x1 = $Ø($£(79),0,$scid($cid).network)) $left($replace($strip($1-),$me,$Ø($£(5))),500)
+    if ($activecid != $cid) {
+      scid $activecid __echo $color(highlight) $iif($chr(32) isin $active,-s,-ga) %x1
+      scid $cid echo $color(highlight) -s %x
+    }
+    elseif ($active != $nick) __echo $color(highlight) $iif($chr(32) isin $active,-s,-ga) %x
+    if ($line(Status Window,$line(Status Window,0)) != %x) echo $color(highlight) -s %x
+    if (!$_ret(snd.y)) { _set snd.y 1 | .timer -io 1 5 _del snd.y | _snd y }
+    haltdef
+    return
+  }
+  echo $color(action) $nick $Ø($£(22),0,$nick,$_st($1-))
+  haltdef
+}
+on ^*:JOIN:#:{
+  _e
+  echo $color(normal) # $iif($nick == $me,$Ø($£(7),$color(join),$ø(7)),$Ø($£(8),$color(join),$ø(8)))
+  if ($nick == $me) {
+    hdel -w sttpd $cid $+ _ $+ $chan $+ _*
+    hadd sttpd $cid $+ _ $+ $chan $+ _ 0
+    cline $£(cnick.me) # $me
+    if (!$_ret(snd.j)) { _set snd.j 1 | .timer -io 1 5 _del snd.j | _snd j }
+    _del hraw_ $+ $cid $+ _m_ $+ #
+    _del hraw_ $+ $cid $+ _c_ $+ #
+  }
+  haltdef
+}
+on ^*:PART:#:{
+  _e
+  if ($nick != $me) echo $color(normal) # $Ø($£($iif($1,9,8)),$color(part),$ø(9),$_st($1-))
+  else {
+    hdel -w sttpd $cid $+ _ $+ $chan $+ _*
+    _del hraw_ $+ $cid $+ _m_ $+ #
+    _del hraw_ $+ $cid $+ _c_ $+ #
+    if (!$_ret(snd.g)) { _set snd.g 1 | .timer -io 1 5 _del snd.g | _snd g }
+  }
+  haltdef
+}
+on ^*:NOTIFY:haltdef
+on *:NOTIFY:{
+  _e
+  var %note $notify($nick).note
+  var %sound $notify($nick).sound
+  if (WAVE: isin %note) {
+    var %not = $replace($remove(%note,$×),WAVE:,$×)
+    var %note = $gettok(%not,1,13)
+    var %sound = $gettok(%not,2,13)
+  }
+  if (%note) {
+    var %x = $Ø($£(73),0,$ø(172),$ø(173),%note)
+    if ($activecid != $cid) scid $activecid echo $color(notify) $iif((($chr(32) isin $active) && (Stat isin $active)),-s,-ga) $Ø($£(75),0,$ø(172),$ø(173),$scid($cid).network,%note)
+    else __echo $color(notify) $iif($chr(32) isin $active,-s,-ga) %x
+  }
+  else {
+    var %x = $Ø($£(55),0,$ø(172),$ø(173))
+    if ($activecid != $cid) scid $activecid echo $color(notify) $iif((($chr(32) isin $active) && (Stat isin $active)),-s,-ga) $Ø($£(61),0,$ø(172),$ø(173),$scid($cid).network)
+    else __echo $color(notify) $iif($chr(32) isin $active,-s,-ga) %x
+  }
+  if (%x != $line(Status Window,$line(Status Window,0))) echo $color(notify) -s %x
+  if (!$_ret(snotify)) {
+    if ($exists(%sound)) .splay %sound
+    else _snd t
+    _set snotify 1
+    .timer -io 1 5 _del snotify
+  }
+  haltdef
+}
+on ^*:UNOTIFY:haltdef
+on *:UNOTIFY:{
+  _e
+  var %note $notify($nick).note
+  var %sound $notify($nick).sound
+  if (WAVE: isin %note) {
+    var %not = $replace($remove(%note,$×),WAVE:,$×)
+    var %note = $gettok(%not,1,13)
+    var %sound = $gettok(%not,2,13)
+  }
+  if (%note) {
+    var %x = $Ø($£(74),0,$ø(172),$ø(174),%note)
+    if ($activecid != $cid) scid $activecid echo $color(notify) $iif((($chr(32) isin $active) && (Stat isin $active)),-s,-ga) $Ø($£(76),0,$ø(172),$ø(174),$scid($cid).network,%note)
+    else __echo $color(notify) $iif($chr(32) isin $active,-s,-ga) %x
+  }
+  else {
+    var %x = $Ø($£(56),0,$ø(172),$ø(174))
+    if ($activecid != $cid) scid $activecid echo $color(notify) $iif((($chr(32) isin $active) && (Stat isin $active)),-s,-ga) $Ø($£(62),0,$ø(172),$ø(174),$scid($cid).network)
+    else __echo $color(notify) $iif($chr(32) isin $active,-s,-ga) %x
+  }
+  if (%x != $line(Status Window,$line(Status Window,0))) echo $color(notify) -s %x
+  if (!$_ret(sunotify)) {
+    if ($exists(%sound)) .splay %sound
+    else _snd i
+    _set sunotify 1
+    .timer -io 1 5 _del sunotify
+  }
+  haltdef
+}
+on ^*:QUIT:{
+  _e
+  if ($nick != $me) {
+    var %x = $Ø($£($iif($1,9,8)),$color(quit),$ø(10),$_st($1-))
+    _comecho $nick %x
+    if ($window($nick)) echo $color(normal) $ifmatch %x
+  }
+  haltdef
+}
+on ^*:NICK:{
+  _e
+  if ($newnick === $nick) halt
+  var %x = $Ø($£($iif($nick == $me,10,99)),$color(nick),$ø($iif($nick == $me,11,12)),$newnick,$ø(15))
+  if ($window($newnick)) echo $color(normal) $ifmatch %x
+  _comecho $newnick %x
+  if ($nick == $me) echo $color(normal) -s %x
+  haltdef
+}
+on ^*:RAWMODE:#:{
+  _e
+  echo $color(mode) # $Ø($£(11),0,$ø(13),$1,$2-,$ø(14))
+  haltdef
+}
+on *:INPUT:#:{
+  _e
+  _set awid $ctime
+  _set awid. $+ $$cid $ctime
+  if ((/* !iswm $1) || ($inpaste) || ($ctrlenter)) { say $iif($ctrlenter,$1-,$_cmpb($_rep($_coloURL($1-)),#)) | halt }
+}
+on *:INPUT:?:{
+  _e
+  _set awid $ctime
+  _set awid. $+ $$cid $ctime
+  if ((/* !iswm $1) || ($inpaste) || ($ctrlenter)) { say $iif($ctrlenter,$1-,$_cmpb($_rep($_coloURL($1-)),#)) | halt }
+}
+on *:INPUT:*:{
+  _e
+  _set awid $ctime
+  _set awid. $+ $$cid $ctime
+}
+on ^*:TOPIC:#:{
+  _e
+  echo $color(normal) # $Ø($£(15),$color(topic),$ø(27),$1-,$ø(32)) | haltdef
+}
+on ^*:KICK:#:{
+  _e
+  echo $color(normal) # $iif($knick == $me,$Ø($£(17),$color(kick),$ø(29),$1-,$ø(30)),$Ø($£(16),$color(kick),$ø(28),$knick,$1-,$ø(30)))
+  if ($knick == $me) {
+    echo $color(normal) -s $Ø($£(70),$color(kick),$ø(207),$1-,$ø(30))
+    if (!$_ret(snd.y)) { _set snd.k 1 | .timer -io 1 5 _del snd.k | _snd k }
+    _del hraw_ $+ $cid $+ _m_ $+ #
+    _del hraw_ $+ $cid $+ _c_ $+ #
+  }
+  haltdef
+}
+on *:DNS:{
+  _e
+  if ((!$iaddress) && (!$naddress) && (!$raddress)) echo $color(normal) -a $Ø($£(39),$color(info),$nick,$ø(151))
+  else {
+    echo $color(normal) -a -
+    if ($nick) echo $color(normal) -a $Ø($£(41),$color(info2),$nick,$ø(153))
+    echo $color(normal) -a $Ø($£(42),$color(info2),$iaddress,IP)
+    echo $color(normal) -a $Ø($£(42),$color(info2),$naddress,Host)
+    echo $color(normal) -a -
+  }
+  haltdef
+}
+on ^*:USERMODE:{
+  _e
+  if ($nick == $me) { 
+    echo $color(mode) -s $Ø($£(52),0,$1-,$usermode,$ø(160))
+    halt
+  }
+}
+on *:OP:#:{
+  _e
+  if ($me isop #) {
+    if ($_cfgret(shitlist)) {
+      if ($opnick == $me) { 
+        var %x = 1
+        while ($nick(#,%x)) {
+          if ($_shitlist($_address($ifmatch,5))) _shitkick # $nick(#,%x) $_address($nick(#,%x),2)
+          inc %x 
+        } 
+      }
+    }
+    if ($nick == $me) return
+    if ($opnick == $me) { 
+      echo $color(mode) -s $Ø($£(53),0,$ø(170))
+      if (!$_ret(opsound)) {
+        _snd o
+        _set opsound 1
+        .timer -io 1 5 _del opsound
+      }
+    }
+  }
+}
+on *:DEOP:#:{
+  _e
+  if ($nick == $me) return
+  if ($opnick == $me) { 
+    if ($me !isop #) {
+      echo $color(mode) -s $Ø($£(54),0,$ø(171))
+      if (!$_ret(deopsound)) {
+        _snd p
+        _set deopsound 1
+        .timer -io 1 5 _del deopsound
+      }
+    }
+  }
+}
+
+
+;// Raws
+raw 433:*:{
+  echo $color(normal) -s $Ø($£(13),$color(info2),$2,$ø(17),$ø(18))
+  if (($2 == $anick) && (!$_ret(con. $+ $cid))) {
+    echo $color(normal) -s $Ø($£(14),$color(info2),$ø(19)) 
+    .nick mech_ $+ $rand(a,z) $+ $rand(a,z) $+ $rand(a,z)
+  }
+  halt
+}
+raw 004:*:if (h isincs $5) { _set hop. $+ $cid 1 | echo $color(normal) -s $Ø($£(14),$color(info2),$ø(26)) } | else _set hop. $+ $cid 0 | haltdef
+raw 332:*:echo $color(normal) $2 $Ø($£(18),$color(topic),$ø(32),$3-) | haltdef
+raw 333:*:echo $color(normal) $2 $Ø($£(19),$color(topic),$ø(33),$3,$asctime($4,dd/mm/yyyy HH:nn:ss)) | haltdef
+raw 001:*:echo $color(info) -s $Ø($£(84),0,$2-) | haltdef
+raw 002:*:echo $color(info) -s $Ø($£(84),0,$2-) | haltdef
+raw 003:*:echo $color(info) -s $Ø($£(84),0,$2-) | haltdef
+raw 005:*:haltdef
+raw 252:*:echo $color(info) -s $Ø($£(85),0,$2,$ø(255)) | haltdef
+raw 253:*:echo $color(info) -s $Ø($£(86),0,$2,$ø(256)) | haltdef
+raw 254:*:echo $color(info) -s $Ø($£(87),0,$2,$ø(257)) | haltdef
+raw 255:*:echo $color(info) -s $Ø($£(88),0,$4,$7,$ø(258),$ø(259),$ø(260)) | echo $color(normal) -s - | haltdef
+raw 372:*:echo $color(info) -s $Ø($£(82),0,$3-) | haltdef
+raw 375:*:echo $color(info) -s $Ø($£(81),0,$3,$ø(253)) | haltdef
+raw 376:*:echo $color(info) -s $Ø($£(83),0,$ø(254)) | haltdef
+raw 422:*:echo $color(info) -s $Ø($£(89),0,$ø(261)) | haltdef
+raw 251:*:{
+  echo $color(normal) -s -
+  echo $color(info) -s $Ø($£(96),0,$ø(283),$4)
+  echo $color(info) -s $Ø($£(96),0,$ø(284),$7)
+  echo $color(info) -s $Ø($£(96),0,$ø(285),$calc($4 + $7))
+  echo $color(info) -s $Ø($£(96),0,$ø(286),$10)
+  haltdef
+}
+;raws del whois
+raw 301:*:echo $color(normal) -s $Ø($£(28),$color(whois),$2,$3-,$ø(137)) | haltdef
+raw 307:*:echo $color(normal) -s $Ø($£(80),$color(whois),$2,$ø(68)) | haltdef
+raw 310:*:echo $color(normal) -s $Ø($£(29),$color(whois),$2,$ø(138)) | haltdef
+raw 311:*:echo $color(normal) -s - | echo $color(normal) -s $Ø($£(30),$color(whois),$2,$3,$4,$6-)) | haltdef
+raw 312:*:echo $color(normal) -s $Ø($£(31),$color(whois),$2,$ø(139),$3,$4-) | haltdef
+raw 313:*:echo $color(normal) -s $Ø($£(32),$color(whois),$2,$3-) | haltdef
+raw 317:*:echo $color(normal) -s $Ø($£(33),$color(whois),$2,$ø(140),$duration($3),idle) | echo $color(normal) -s $Ø($£(34),$color(whois),$2,$ø(141),$asctime($4)) | haltdef
+raw 318:*:echo $color(normal) -s $Ø($£(35),$color(whois),$2,$ø(142)) | echo $color(normal) -s - | haltdef
+raw 319:*:echo $color(normal) -s $Ø($£(36),$color(whois),$2,$3-,$ø(143)) | haltdef
+raw 335:*:echo $color(normal) -s $Ø($£(32),$color(whois),$2,$3-) | haltdef
+raw 353:*:echo $color(info) -s $Ø($£(92),0,$ø(279),$3,$4-) | haltdef
+
+raw 378:*:{
+  if ($3-5 == is connecting from) echo $color(normal) -s $Ø($£(37),$color(whois),$2,$6,$ø(144))
+  elseif ($5) echo $color(normal) -s $Ø($£(37),$color(whois),$2,$5,$ø(144))
+  else echo $color(normal) -s $Ø($£(37),$color(whois),$2,$4,$ø(144))
+  haltdef
+}
+raw 379:*:echo $color(normal) -s $Ø($£(38),$color(whois),$2,$ø(150),$6) | haltdef
+raw 401:*:{
+  if ($2 != *) {
+    var %x = $Ø($£(39),$color(whois),$2,$ø(151)) | echo $color(normal) -s %x | if ($window($2)) echo $color(normal) $2 %x | haltdef
+  }
+}
+;mide lag
+alias _midelag { 
+  if ($server) _l. $+ $calc($ticks +5000)
+  if ($1 != 30) _set lastlag. $+ $cid $ticks
+  .timer_midelag. $+ $cid 0 30 _midelag 30
+}
+raw 421:*:{
+  if (_l.* iswm $2) {
+    _set lastlag. $+ $cid $right($2,-3)
+    .timer_midelag. $+ $cid  1 5 _midelag
+    haltdef
+  }
+  elseif ($2 == !mOtFv3!) haltdef
+  else {
+    echo $color(info) -s $Ø($£(91),0,$ø(265),$2)
+    haltdef
+  }
+}
+raw 265:*:echo $color(info) -se $Ø($£(90),0,$5,$7,$8-,$ø(262),$ø(263)) | haltdef
+raw 266:*:echo $color(info) -se $Ø($£(90),0,$5,$7,$8-,$ø(264),$ø(263)) | haltdef
+raw 324:*:{
+  if (!$_ret(hraw_ $+ $cid $+ _m_ $+ $2)) {
+    echo $color(info) $iif($me ison $2,$2,-s) $Ø($£(93),0,$ø(280),$2,$3-)
+    _set hraw_ $+ $cid $+ _m_ $+ $2 1
+  }
+  else {
+    echo -se -
+    echo $color(info) -s $Ø($£(93),0,$ø(280),$2,$3-)
+  }
+  haltdef
+}
+raw 329:*:{
+  if (!$_ret(hraw_ $+ $cid $+ _c_ $+ $2)) {
+    echo $color(info) $iif($me ison $2,$2,-s) $Ø($£(94),0,$ø(281),$2,$asctime($3))
+    _set hraw_ $+ $cid $+ _c_ $+ $2 1
+  }
+  else {
+    echo $color(info) -s $Ø($£(94),0,$ø(281),$2,$asctime($3))
+    echo -se -
+  }
+  haltdef
+}
+raw 402:*:echo $color(info) -s $Ø($£(95),0,$ø(282),$2) | haltdef
+
+;// Who+IAL
+alias _getial {
+  if (!$chan($1).ial) {
+    _set ial. $+ $cid $+ . $+ $1 1
+    if (!$_ret(lastial. $+ $cid)) _goial
+  }
+  else {
+    _del ial. $+ $cid . $+ $1
+    echo $color(info) $1 $Ø($£(69),$color(info),$ø(206))
+  }
+}
+alias _goial {
+  if (!$_ret(lastial. $+ $cid)) {
+    while ((!$_ret(lastial. $+ $cid)) && ($hfind(tmp,ial. $+ $cid $+ .*,0,w))) {
+      var %y = $hfind(tmp,ial. $+ $cid $+ .*,1,w)
+      var %x = $right(%y,$calc(-5 - $len($cid)))
+      if ($me ison %x) {
+        _set lastial. $+ $cid %x
+        _set lastialtime. $+ $cid $ticks
+        who %x
+      }
+      _del $$iif($_ret(%y),%y)
+    }
+  }
+}
+raw 366:*:{
+  _getial $2
+  echo $color(whois) -s $Ø($£(65),$color(info),$ø(203),$2)
+  if (($me isop $2) && ($_chmodx != $null) && ($_cfgret(chanmodes) != 1)) {
+    mode $2 $_chmodx
+  }
+  haltdef
+}
+alias _chmodx {
+  if (!$_cfgret(nodefs_1)) return +nt
+  else return $_cfgret(chanmods)
+}
+raw 352:*:{
+  if ((!$_ret(lastial. $+ $cid)) || (!$chan($_ret(lastial. $+ $cid)).inwho)) {
+    echo $color(whois) -s $Ø2($£(66),$1-)
+  }
+  haltdef
+}
+raw 315:*:{
+  haltdef
+  if ($_ret(lastial. $+ $cid) == $2) {
+    echo $color(info) -g $_ret(lastial. $+ $cid) $Ø($£(63),0,$ø(201),$_rnd3c($calc(($ticks - $_ret(lastialtime. $+ $cid)) /1000)) secs)
+    _del lastial. $+ $cid
+    _del lastialtime. $+ $cid
+    var %x = 1
+    while ($nick($2,%x)) {
+      if ($_shitlist($_address($ifmatch,5))) _shitkick $2 $nick($2,%x) $_address($nick($2,%x),2)
+      inc %x 
+    } 
+    _goial
+  }
+  else echo $color(whois) -s $Ø($£(64),0,$ø(202),$2)
+}
+raw 416:*:{
+  haltdef
+  if ($_ret(lastial. $+ $cid) == $2) {
+    echo $color(info) -g $_ret(lastial. $+ $cid) $Ø($£(67),0,$ø(204),$_rnd3c($calc(($ticks - $_ret(lastialtime. $+ $cid)) /1000)) secs)
+    _del lastial. $+ $cid
+    _del lastialtime. $+ $cid
+    var %x = 1
+    while ($nick($2,%x)) {
+      if ($_shitlist($_address($ifmatch,5))) _shitkick $2 $nick($2,%x) $_address($nick($2,%x),2)
+      inc %x 
+    } 
+    _goial
+  }
+  else echo $color(whois) -s $Ø($£(68),0,$ø(205))
+}
+
+
+;// Dialog del kick
+alias dinput {
+  var %x = $dialog(dinput,dinput,-2)
+  if ($_ret(dinput) == 1) {
+    _set dinput 0
+    return
+  }
+  _set dinput 0
+  if (%x == $null) return -
+  else return %x
+}
+dialog dinput {
+  title Kick
+  size -1 -1 338 84
+  option pixels
+  edit , 1, 4 30 330 20, result,autohs,limit300
+  text $ø(65), 2, 4 8 330 16
+  button $ø(38), 3, 6 56 88 24, ok
+  button $ø(39), 4, 244 56 88 24, cancel
+}
+on *:DIALOG:dinput:init:0:_set dinput 0
+on *:DIALOG:dinput:sclick:4:_set dinput 1
+
+
+;// Dialog del nick
+alias ninput {
+  var %x = $dialog(ninput,ninput,-2)
+  if ($_ret(ninput) == 1) {
+    _set ninput 0
+    return
+  }
+  _set dinput 0
+  if (%x == $null) return
+  else return %x
+}
+dialog ninput {
+  title Nick
+  size -1 -1 338 84
+  option pixels
+  edit , 1, 4 30 330 20, result,autohs,limit300
+  text $ø(220), 2, 4 8 330 16
+  button $ø(38), 3, 6 56 88 24, ok
+  button $ø(39), 4, 244 56 88 24, cancel
+}
+on *:DIALOG:ninput:init:0:_set ninput 0
+on *:DIALOG:ninput:sclick:4:_set ninput 1
+
+
+;// Dialog de pregunta al desconectar
+alias _usure {
+  var %x = $dialog(con_sure,con_sure,-2)
+  return $_ret(csure)
+}
+dialog con_sure {
+  title $ø(216)
+  size -1 -1 242 90
+  option pixels
+  button $ø(214), 1, 4 62 74 24,ok
+  button $ø(215), 2, 162 62 74 24,cancel
+  text $ø(213), 3, 6 14 228 38
+}
+on *:DIALOG:con_sure:init:0:_set csure 0
+on *:DIALOG:con_sure:sclick:1:_set csure 1
+
+
+;// Anti-desactivar el script
+alias timer _e | $iif(!$show,.) $+ timer $1- | _e
+alias timers _e | $iif(!$show,.) $+ timers $1- | scid -at1 _midelag | _e
+alias _e if (!$timer(_idle2s)) .timer_idle2s -io 0 2 _idle2s
+alias clearall clearall | _xcl | _statbar
+alias window _e | window $1- | _e
+
+;// Configuración general
+alias _genconf _dialog genconf d
+dialog genconf {
+  title $ø(249)
+  size -1 -1 256 166
+  option pixels
+  icon sys\ico\Genconf.ico, 0
+  check $ø(224), 1, 4 6 244 20
+  edit "", 2, 6 28 124 21, autohs limit 200
+  check $ø(225), 3, 4 56 244 20
+  edit "", 4, 6 78 124 21, autohs limit 3
+  check $ø(236), 5, 4 106 244 20
+  button $ø(38), 500, 22 135 75 25, ok
+  button $ø(39), 501, 137 135 75 25, cancel
+}
+on *:DIALOG:genconf:init:0:{
+  if (!$_cfgret(chanmodes)) did -c genconf 1
+  if ($_cfgret(qlimits)) did -c genconf 3
+  if ($_cfgret(vermn)) did -c genconf 5
+  did -a genconf 2 $_chmodx
+  did -a genconf 4 $_qlimit
+  if ($did(genconf,1).state == 0) did -b genconf 2
+  if ($did(genconf,3).state == 0) did -b genconf 4
+  if (!$_cfgret(nodefs_1)) {
+    _cfgset chanmods $_chmodx
+    _cfgset qlimit $qlimits
+    _cfgset nodefs_1 1
+  }
+}
+on *:DIALOG:genconf:edit:4:{
+  if ($_solonum($did(4)) != $did(4)) {
+    did -r genconf 4
+    if ($ifmatch) did -a genconf 4 $ifmatch
+  }
+}
+on *:DIALOG:genconf:sclick:*:{
+  if ($did == 1) {
+    if ($did(genconf,1).state == 0) did -b genconf 2
+    else did -e genconf 2
+  }
+  if ($did == 3) {
+    if ($did(genconf,3).state == 0) did -b genconf 4
+    else did -e genconf 4
+  }
+  if ($did == 500) {
+    _cfgset chanmods $did(genconf,2)
+    _cfgset qlimit $did(genconf,4)
+    if ($did(genconf,5).state) _cfgset vermn 1
+    else _cfgset vermn 0
+    if ($did(genconf,3).state) _cfgset qlimits 1
+    else _cfgset qlimits 0
+    if ($did(genconf,1).state) _cfgset chanmodes 0
+    else _cfgset chanmodes 1
+  }
+}
+
+
+;// EOF

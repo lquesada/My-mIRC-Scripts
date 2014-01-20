@@ -1,0 +1,738 @@
+;[Mech Exp] by LZ
+_v return e1r14
+_vm return 6.03
+_w return 12http://noweb
+
+sendkey {
+  var %x,%y
+  if ($1 == ALT) { var %x %x $+ % | tokenize 32 $2- }
+  if ($1 == CTRL) { var %x %x $+ ^ | tokenize 32 $2- }
+  if ($1 == SHIFT) { var %x %x $+ + | tokenize 32 $2- }
+  if ($1 == ALT) { var %x %x $+ % | tokenize 32 $2- }
+  if ($1 == CTRL) { var %x %x $+ ^ | tokenize 32 $2- }
+  if ($1 == SHIFT) { var %x %x $+ + | tokenize 32 $2- }
+  while ((!%y) || ($com(%y))) {
+    var %y = key- $+ $rand(a,z) $+ $rand(a,z) $+ $rand(a,z)
+  }
+  .comopen %y WScript.Shell
+  if (!$comerr) var %z = $com(%y,SendKeys,3,bstr,%x $+ $1-)
+  if ($com(%y)) .comclose %y
+}
+_defcolor {
+  if ($1 == 0) return 16777215
+  if ($1 == 1) return 0
+  if ($1 == 2) return 8388608
+  if ($1 == 3) return 37888
+  if ($1 == 4) return 255
+  if ($1 == 5) return 128
+  if ($1 == 6) return 10485920
+  if ($1 == 7) return 33023
+  if ($1 == 8) return 65535
+  if ($1 == 9) return 64512
+  if ($1 == 10) return 9475072
+  if ($1 == 11) return 16776960
+  if ($1 == 12) return 16711680
+  if ($1 == 13) return 16711935
+  if ($1 == 14) return 8421504
+  if ($1 == 15) return 13685968
+}
+__echo {
+  if ($2 == -s) echo $1-
+  elseif ($chr(32) !isin $2) echo $1-
+}
+query {
+  var %x $window($1)
+  query $$1
+  if (($window($1)) && (!%x)) {
+    _loadlg $1
+    var %address $gettok($address($1,5),2-,33)
+    echo $color(highlight) $1 $Ø3($£($iif(!%address,59,50)),0,$ø(156),$ø(157),$1,%address)
+    var %tmp 1
+    var %tmp.
+    while ((%tmp <= $comchan($1,0)) && ($len(%tmp) <= 600)) { 
+      var %x = $comchan($1,%tmp)
+      if ($1 isop %x) var %tmp. = %tmp. @ $+ %x
+      elseif ($1 ishop %x) var %tmp. = %tmp. % $+ %x
+      elseif ($1 isvo %x) var %tmp. = %tmp. + $+ %x
+      else var %tmp. = %tmp. %x 
+      inc %tmp 
+    }
+    echo $color(highlight) $1 $Ø($£(60),0,$ø(158),$ø(159),%tmp.,$comchan($1,0),$1)
+  }
+  msg $1 $$2-
+}
+_loadlg {
+  if ($window($1)) {
+    if ($exists(user\logs\ $+ $mknickfn($1) $+ .log)) .loadbuf -c $+ $color(other) $1 user\logs\ $+ $mknickfn($1) $+ .log
+  }
+}
+notify notify $1- | if ($1-) _snotf
+_snotr {
+  _htable 100 snotr $iif($isfile(user\config\notify.Ecf),user\config\notify.Ecf)
+  var %x 1
+  while (%x <= $hfind(snotr,*,0,w)) {
+    if ($hget(snotr,%x)) .notify $ifmatch
+    inc %x
+  }
+  hfree snotr
+}
+_chrg {
+  if ($1 >= 100) { if ($window(@Cargando)) window -c @Cargando | return }
+  if (!$window(@Cargando)) {
+    window -ph +d @Cargando 0 0 110 25
+    drawrect -frn @Cargando 13158600 1 0 0 200 100
+    drawrect -rn @Cargando 0 1 1 1 108 23
+    drawrect -rn @Cargando 0 1 5 5 100 15
+    window -a @Cargando
+  }
+  if ($1 > 0) drawrect -rfn @Cargando 0 1 6 6 $1 13
+  drawdot @Cargando
+}
+_chrg2 {
+  if ($1 >= 100) { if ($window(@Cargando2)) window -c @Cargando2 | return }
+  if (!$window(@Cargando2)) {
+    window -ph +d @Cargando2 0 0 110 25
+    drawrect -frn @Cargando2 13158600 1 0 0 200 100
+    drawrect -rn @Cargando2 0 1 1 1 108 23
+    drawrect -rn @Cargando2 0 1 5 5 100 15
+    window -a @Cargando2
+  }
+  if ($1 > 0) drawrect -rfn @Cargando2 0 1 6 6 $1 13
+  drawdot @Cargando2
+}
+away {
+  if ($1-) {
+    _set awmot. $+ $cid $1-
+    _set awstt. $+ $cid 1
+    if ($_ret(awist. $+ $cid)) _del awist. $+ $cid
+    if ($status == connected) {
+      away $1-
+      if ($_cfgret(awayanuncio) != 0) ame $_awy(ON,$1-)
+    }
+  }
+  elseif ($_ret(awstt. $+ $cid)) _butaway
+  _awaybutact
+}
+connection {
+  if ($status == disconnected) { _th.conn2 on | server }
+  else { if ($_usure) { _th.conn2 off | disconnect } }
+}
+F1 $_cfgret(F1)
+F2 $_cfgret(F2)
+F3 $_cfgret(F3)
+F4 $_cfgret(F4)
+F5 $_cfgret(F5)
+F6 $_cfgret(F6)
+F7 $_cfgret(F7)
+F8 $_cfgret(F8)
+F9 $_cfgret(F9)
+F10 $_cfgret(F10)
+F11 $_cfgret(F11)
+F12 $_cfgret(F12)
+sF1 $_cfgret(Shift+F1)
+sF2 $_cfgret(Shift+F2)
+sF3 $_cfgret(Shift+F3)
+sF4 $_cfgret(Shift+F4)
+sF5 $_cfgret(Shift+F5)
+sF6 $_cfgret(Shift+F6)
+sF7 $_cfgret(Shift+F7)
+sF8 $_cfgret(Shift+F8)
+sF9 $_cfgret(Shift+F9)
+sF10 $_cfgret(Shift+F10)
+sF11 $_cfgret(Shift+F11)
+sF12 $_cfgret(Shift+F12)
+cF1 $_cfgret(Ctrl+F1)
+cF2 $_cfgret(Ctrl+F2)
+cF3 $_cfgret(Ctrl+F3)
+cF4 $_cfgret(Ctrl+F4)
+cF5 $_cfgret(Ctrl+F5)
+cF6 $_cfgret(Ctrl+F6)
+cF7 $_cfgret(Ctrl+F7)
+cF8 $_cfgret(Ctrl+F8)
+cF9 $_cfgret(Ctrl+F9)
+cF10 $_cfgret(Ctrl+F10)
+cF11 $_cfgret(Ctrl+F11)
+cF12 $_cfgret(Ctrl+F12)
+
+
+_th.fill return $iif($isfile($+(user\theme\,$£(dir),\,$£(fill))),$+(user\theme\,$£(dir),\,$£(fill)),sys\deftheme\fill.jpg)
+_th.bar return $iif($isfile($+(user\theme\,$£(dir),\,$£(bar))),$+(user\theme\,$£(dir),\,$£(bar)),sys\deftheme\bar.jpg)
+_th.lagb return $iif($£(lagb) isnum,$ifmatch,37)
+_th.lagc return $iif($£(lagc) isnum,$ifmatch,5)
+_th.conn2 {
+  if ($1 == on) {
+    drawpic @_bar 0 0 $iif($isfile($+(user\theme\,$£(dir),\,$£(conon))),$+(user\theme\,$£(dir),\,$£(conon)),sys\deftheme\conon.jpg)
+  }
+  if ($1 == off) {
+    drawpic @_bar 0 0 $iif($isfile($+(user\theme\,$£(dir),\,$£(conoff))),$+(user\theme\,$£(dir),\,$£(conoff)),sys\deftheme\conoff.jpg)
+  }
+}
+_th.conn {
+  if ($status == disconnected) {
+    if (($_ret(conn2) != off) || ($1 == f)) {
+      _set conn2 off
+      _th.conn2 off
+    }
+  }
+  else {
+    if (($_ret(conn2) != on) || ($1 == f)) {
+      _set conn2 on
+      _th.conn2 on
+    }
+  }
+}
+server server $1-
+join _showcon | join $1-
+whois _showcon | whois $1-
+part _showcon | part $1-
+quit _showcon | quit $1-
+list _showcon | list $1-
+_showcon {
+  if (($status == disconnected) || ($status == connecting)) {
+    echo $color(highlight) -a $Ø($£(71),0,$ø(209))
+    halt
+  }
+}
+numrate {
+  var %x = $1,%y = 1,%z = 1
+  if ($hget(portscan)) hfree portscan
+  hmake portscan 100
+  tokenize 44 $1
+  while (%y <= $numtok($1-,32)) {
+    _set tok $gettok($1-,%y,32)
+    if (- isin $_ret(tok)) { 
+      _set z $gettok($_ret(tok),1,45) | _set z1 $gettok($_ret(tok),2,45)
+      if (($_ret(z) isnum) && ($_ret(z1) isnum)) { 
+        while ($_ret(z) <= $_ret(z1)) { 
+          hadd portscan %z $_ret(z)
+          inc %z
+          _set z $calc($_ret(z) +1) 
+        }
+      }
+    }
+    else {
+      hadd portscan %z $_ret(tok)
+      inc %z
+    }
+    inc %y
+  }
+  return OK
+}
+
+
+;Parse del NOTICE:
+onotice notice @ $+ # $1-
+notice {
+  _showcon
+  if ($2 == $null) return
+  .notice $1-
+  if ($show) echo $color(notice) -a $Ø($£(26),0,$1,$2-)
+}
+;Parse del CTCP:
+ctcp {
+  _showcon
+  if ($2 == $null) return
+  .ctcp $1-
+  if ($show) echo $color(ctcp) -a $Ø($£(45),0,$1,$2,$3-)
+}
+ctcpreply {
+  _showcon
+  if ($2 == $null) return
+  .ctcpreply $1-
+  if ($show) echo $color(ctcp) -a $Ø($£(46),0,$1,$2,$3-)
+}
+;Parse del MSG:
+omsg _showcon | .omsg $1- | echo $color(own) -a $Ø($£(20),0,@ $+ $active,$1-)
+msg {
+  _showcon
+  if ($2 == $null) return
+  .msg $1-
+  if ($me ison $1) var %x $_sttpdin($cid,$1,$me,$strip($2-))
+  if ($show) {
+    if ((=* iswm $1) && ($chat($right($1,-1)))) echo $color(own) $1 $Ø($£($iif($_cfgret(vermn),77,12)),0,$2-)
+    elseif (($query($1)) || ($me ison $1)) echo $color(own) $1 $Ø($£($iif($_cfgret(vermn),77,12)),0,$2-)
+    else echo $color(own) -a $Ø($£(20),0,$1,$2-)
+  }
+}
+say {
+  if (=* iswm $active) { say $1- | return }
+  _showcon
+  $+($iif(!$show,.),msg) $active $1-
+}
+amsg {
+  var %x = 1
+  while ($chan(%x)) {
+    if ($me ison $chan(%x)) $+($iif(!$show,.),msg) $chan(%x) $1- 
+    inc %x
+  }
+}
+;Parse del /me
+describe {
+  _showcon
+  if ($1 == $null) return
+  .describe $1-
+  if ($show) {
+    if (($left($1,1) == =) && ($chat($right($1,-1)))) echo $color(own) $1 $Ø($£(22),0,$me,$2-)
+    elseif (($query($1)) || ($me ison $1)) echo $color(own) $1 $Ø($£(22),0,$me,$2-)
+    else echo $color(own) -a $Ø($£(21),0,$1,$2-)
+  }
+}
+me {
+  if (=* iswm $active) { me $1- | return }
+  _showcon
+  $+($iif(!$show,.),describe) $active $1-
+}
+action $+($iif(!$show,.),describe) $active $1-
+ame {
+  var %x = 1
+  while ($chan(%x)) {
+    if ($me ison $chan(%x)) $+($iif(!$show,.),describe) $chan(%x) $1- 
+    inc %x
+  }
+}
+
+dns .dns $1- | if ($show) echo $color(normal) -a $Ø($£(40),$color(info2),$ø(152),$iif(($istok(-h.-c.-hc,$1,46)),$2,$1))
+
+_error .timer 1 0 var %d = $input($1-,oh,Error)
+
+ø return $hget(lang,$1)
+Øtm return $replace($1,&,$×,$×(c[n]),$color(normal),$×(c[b]),$color(back),$×(c[h]),$color(highlight),$×,&)
+£ {
+  if ($_cfgret(thememod)) return $iif($hfind(thememod,$1).item,$Øtm($hget(thememod,$1)),$hget(theme,$1))
+  else return $hget(theme,$1)
+}
+j join #$$1-
+p part #
+n names $$1-
+w whois $$1-
+k kick # $$1-
+q query $$1-
+send dcc send $1-
+chat dcc chat $1
+splay .splay $1-
+nick nick $1- | _cfgset nick $1-
+quit quit $£(1) $_w $iif($1-,$1-,$_quit)
+m msg $1-
+_loadtheme _htable 100 theme $+(user\theme\,$iif($isfile($+(user\theme\,$_cfgret(t))),$_cfgret(t),mech.Etm))
+_loadlang _htable 100 lang $+(user\lang\,$iif($isfile($+(user\lang\,$_cfgret(l))),$_cfgret(l),es.Elg))
+_loadsounds _htable 100 sounds $+(user\sounds\,$iif($isfile($+(user\sounds\,$_cfgret(s))),$_cfgret(s),Gra2.Esd))
+_comecho if ($2) { var %x = 1 | while ($comchan($1,%x)) { echo $color(normal) $ifmatch $2- | inc %x } | if ($1 == $me) echo $color(normal) -s $2- }
+_ccecho if ($3) { var %x = 1 | while ($comchan($2,%x)) { echo $1 $ifmatch $3- | inc %x } | if ($2 == $me) echo $1 -s $3- }
+_dialog dialog $iif($dialog($1),-v,-m) $1 $1
+_joke var %x = user\lang\ $+ $ø(d) $+ \jokes.Elg,%y = $isfile(%x) | return $iif(%y,$read(%x,n),$read(sys\deflang\jokes.Elg))
+_quit var %x = user\lang\ $+ $ø(d) $+ \quits.Elg,%y = $isfile(%x) | return $iif(%y,$read(%x,n),$read(sys\deflang\quits.Elg))
+_kick var %x = user\lang\ $+ $ø(d) $+ \kicks.Elg,%y = $isfile(%x) | return $iif(%y,$read(%x,n),$read(sys\deflang\kicks.Elg))
+
+_themepreview {
+  var %x = $+(user\theme\,$left($gettok($gettok($did(themesel,8).seltext,3,9),5-,32),-3),jpg)
+  if (%x == user\theme\jpg) return
+  else did -g themesel 1 0 $iif(($isfile(%x)) && ($gettok($gettok($did(themesel,8).seltext,3,9),5-,32)),%x,sys\deftheme\preview.jpg)
+}
+_changelang if ($isfile($+(user\lang\,$1))) { _cfgset l $1 | _loadlang | _cfgsave | _cldials } | _title
+_cldials {
+  var %z 1
+  while ($dialog(%z)) {
+    var %z1 $ifmatch
+    if (%z1 == cpanel) {
+      dialog -t cpanel $ø(42)
+      var %x = $read(sys\res\cpanel.Ers,n,$calc($did(cpanel,8).sel -1)))
+      did -ra cpanel 9 $ø($gettok(%x,4,1))
+      did -r cpanel 8
+      var %x = 1
+      while ($read(sys\res\cpanel.Ers,n,%x)) {
+        _cpadd %x $ifmatch
+        inc %x
+      }
+    }
+    if (%z1 == upanel) {
+      dialog -t upanel $ø(107)
+      var %x = $read(sys\res\upanel.Ers,n,$calc($did(upanel,8).sel -1)))
+      did -ra upanel 9 $ø($gettok(%x,4,1))
+      did -r upanel 8
+      var %x = 1
+      while ($read(sys\res\upanel.Ers,n,%x)) {
+        _upadd %x $ifmatch
+        inc %x
+      }
+    }
+    if (%z1 == themesel) {
+      dialog -t themesel $ø(46)
+      did -ra themesel 9 $ø(49)
+      did -ra themesel 10 $ø(128)
+      did -ra themesel 2 $ø(169)
+      did -i themesel 8 1 headertext + 0 Theme 	 $ø(47) 	.
+    }
+    if (%z1 == soundssel) {
+      dialog -t soundssel $ø(52)
+      did -ra soundssel 9 $ø(49)
+      did -ra soundssel 10 $ø(39)
+      did -i soundssel 8 1 headertext + 0 $ø(53) 	 $ø(47) 	.
+    }
+    if (%z1 == sttp) {
+      dialog -t sttp $ø(100)
+      did -ra sttp 1 $ø(34)
+      did -ra sttp 2 $ø(100)
+      did -ra sttp 3 $ø(101)
+      did -ra sttp 5 $ø(102) $+ :
+      did -ra sttp 6 $ø(103)
+      did -ra sttp 8 $ø(38)
+      did -ra sttp 9 $ø(39)
+    }
+    if (%z1 == portscan) {
+      dialog -t portscan $ø(123)
+      did -ra portscan 7 $ø(125)
+      did -ra portscan 8 $ø(129)
+      did -ra portscan 9 $ø(132)
+      did -ra portscan 10 $ø(124)
+      did -ra portscan 11 $ø(124)
+      did -ra portscan 12 $ø(124)
+      did -ra portscan 13 $ø(101)
+      did -ra portscan 16 $ø(126)
+      did -ra portscan 17 $ø(127)
+      did -ra portscan 18 $ø(128)
+      did -i portscan 15 1 headertext + 0 IP	 $+ $ø(102) $+ 	 $+ $ø(130) $+ 	 $+ $ø(131) $+ 	 $+  
+      var %x 2
+      while ($did(portscan,15,2,%x)) {
+        var %z = $did(portscan,15,2,%x)
+        if ($gettok($ifmatch,$numtok($ifmatch,32),32)) {
+          _set pttmp_ $+ %x + 0 $_tok4($right($gettok(%z,1,9),-3)) $+ 	 $+ $gettok(%z,2,9) $+ 	 $+ $ø(134) $+ 	 $+ $gettok(%z,4,9) $+ 	 $+ + 0 0 0 1
+        }
+        else {
+          _set pttmp_ $+ %x $_tok4($right($gettok(%z,1,9),-3)) $+ 	 $+ $gettok(%z,2,9) $+ 	 $+ $ø(135) $+ 	 $+ $gettok(%z,4,9) $+ 	 $+ + 0 0 0 0
+        }
+        inc %x
+      }
+      var %z 2
+      did -r portscan 15 2
+      while (%z <= %x) {
+        did -a portscan 15 2 $_ret(pttmp_ $+ %z)
+        _del pttmp_ $+ %z
+        inc %z
+      }
+      _del pttmp
+    }
+    if (%z1 == socktelnet) {
+      dialog -t socktelnet $ø(112)
+      did -ra socktelnet 6 $ø(117)
+      did -ra socktelnet 4 $ø(165)
+      did -ra socktelnet 5 $ø(128)
+      did -ra socktelnet 7 $ø(102)
+    }
+    if (%z1 == genconf) {
+      dialog -t genconf $ø(249)
+      did -ra genconf 1 $ø(224)
+      did -ra genconf 3 $ø(225)
+      did -ra genconf 5 $ø(236)
+      did -ra genconf 500 $ø(38)
+      did -ra genconf 501 $ø(39)
+    }
+    if (%z1 == nickcomp) {
+      dialog -t nickcomp $ø(85)
+      did -ra nickcomp 13 $ø(38)
+      did -ra nickcomp 14 $ø(39)
+      did -ra nickcomp 1 $ø(87)
+      did -ra nickcomp 2 $ø(154)
+    }
+    if (%z1 == webcomp) {
+      dialog -t webcomp $ø(166)
+      did -ra webcomp 12 $ø(168)
+      did -ra webcomp 13 $ø(38)
+      did -ra webcomp 14 $ø(39)
+      did -ra webcomp 1 $ø(87)
+    }
+    if (%z1 == replacer) {
+      dialog -t replacer $ø(57)
+      did -ra replacer 8 $ø(34)
+      did -ra replacer 10 $ø(55)
+      did -ra replacer 13 $ø(36)
+      did -ra replacer 14 $ø(37)
+      did -ra replacer 15 $ø(38)
+      did -ra replacer 16 $ø(39)
+      did -ra replacer 2 $ø(56)
+      did -i replacer 9 1 headertext + 0 $ø(61) 	 $ø(62)
+    }
+    if (%z1 == shitlist) {
+      did -ra shitlist 8 $ø(34)
+      did -ra shitlist 10 $ø(35)
+      did -ra shitlist 12 $ø(36)
+      did -ra shitlist 13 $ø(37)
+      did -ra shitlist 15 $ø(38)
+      did -ra shitlist 16 $ø(39)
+    }
+    if (%z1 == efekeys) {
+      dialog -t efekeys $ø(50)
+      did -ra efekeys 4 $ø(79)
+      did -ra efekeys 5 $ø(38)
+      did -ra efekeys 6 $ø(39)
+      did -i efekeys 1 1 headertext + 0 $ø(77) 	 $ø(78)
+    }
+    if (%z1 == away) {
+      dialog -t away $ø(178)
+      did -ra away 11 $ø(84)
+      did -ra away 12 &&m = $ø(177), &&s = ON/OFF, &&r = on/off
+      did -ra away 13 $ø(38)
+      did -ra away 14 $ø(39)
+      did -ra away 1 $ø(87)
+      did -ra away 4 $ø(175)
+      did -ra away 5 $ø(176)
+      did -ra away 2 $ø(181)
+    }
+    if (%z1 == fontsizes) {
+      dialog -t fontsizes $ø(185)
+      did -ra fontsizes 4 $ø(128)
+    }
+    if (%z1 == awayidle) {
+      dialog -t awayidle $ø(187)
+      did -ra awayidle 1 $ø(34)
+      did -ra awayidle 2 $ø(188)
+      did -ra awayidle 6 $ø(189)
+      did -ra awayidle 8 $ø(190)
+      did -ra awayidle 9 $ø(191)
+      did -ra awayidle 10 $ø(192)
+      did -ra awayidle 11 $ø(193)
+      did -ra awayidle 12 $ø(194)
+      did -ra awayidle 13 $ø(38)
+      did -ra awayidle 14 $ø(39)
+      did -ra awayidle 15 $ø(195)
+      did -ra awayidle 16 $ø(197)
+    }
+    if (%z1 == versionchanger) {
+      dialog -t versionchanger $ø(266)
+      did -ra versionchanger 1 $ø(248)
+      did -ra versionchanger 5 $ø(38)
+      did -ra versionchanger 6 $ø(39)
+    }
+    if (%z1 == autojoin) {
+      did -ra autojoin 8 $ø(34)
+      did -ra autojoin 12 $ø(36)
+      did -ra autojoin 13 $ø(37)
+      did -ra autojoin 15 $ø(38)
+      did -ra autojoin 16 $ø(39)
+    }
+    if (%z1 == modifier) {
+      dialog -t modifier $ø(239)
+      did -ra modifier 8 $ø(34)
+      did -ra modifier 10 $ø(55)
+      did -ra modifier 13 $ø(36)
+      did -ra modifier 14 $ø(37)
+      did -ra modifier 15 $ø(38)
+      did -ra modifier 16 $ø(39)
+      did -ra modifier 2 $ø(56)
+    }
+    inc %z
+  }
+}
+_tok4 tokenize 32 $1- | return $4-
+_changetheme {
+  _chrg2 0
+  var %x = 0
+  _chrg2 5
+  while (%x <= 15) {
+    if ($color(%x) != $_defcolor(%x)) color %x $_defcolor(%x)
+    inc %x
+  }
+  if ($isfile($+(user\theme\,$1))) { _cfgset t $1 | _chrg2 10 | _loadtheme | _chrg2 20 | _chargetheme | _cfgsave }
+  else _chrg2 100
+  _title
+}
+_changesounds if ($isfile($+(user\sounds\,$1))) { _cfgset s $1 | _loadsounds | _cfgsave } | _title
+
+_st return $1
+;$replace($1, $+ $color(back) $+ $chr(44) $+ $color(back), $+ $color(other), $+ $color(back) $+ $chr(44),$×, $+ $color(back), $+ $color(other),$×, $+ $color(back) $+ $chr(44))
+× return $chr(13) $+ $1
+Ø {
+  return $replace($1,&,$×,$×(a[0]),$address,$×(a[1]),$gettok($address,1,64),$×(a[2]),$gettok($address,2,64) $&
+    ,$×(n),$nick,$×(t),$replace($£(t),&t,$time($£(i))),$×(m),$me,$×(c),$chan,$×(d),$2,$×(r[5]),$7,$×(r[4]),$6,$×(r[3]),$5 $&
+    ,$×(r[2]),$4,$×(r[1]),$3,$×,&)
+}
+Ø2 {
+  var %x $1
+  tokenize 32 $2
+  return $replace(%x,&,$×,$×(a[0]),$+($3,@,$4),$×(a[1]),$3,$×(a[2]),$4 $&
+    ,$×(n),$6,$×(t),$replace($£(t),&t,$time($£(i))),$×(s),$5,$×(m),$7,$×(n),$8,$×(z),$9-,$×(c),$2,$×,&)
+}
+Ø3 {
+  return $replace($1,&,$×,$×(a[0]),$6,$×(a[1]),$gettok($6,1,64),$×(a[2]),$gettok($6,2,64) $&
+    ,$×(n),$5,$×(t),$replace($£(t),&t,$time($£(i))),$×(m),$me,$×(c),$chan,$×(d),$2,$×(r[3]),$5 $&
+    ,$×(r[2]),$4,$×(r[1]),$3,$×,&)
+}
+Ø4 {
+  return $replace($1,&,$×,$×(a[0]),$address,$×(a[1]),$gettok($address,1,64),$×(a[2]),$gettok($address,2,64) $&
+    ,$×(n),$nick,$×(t),$replace($£(t),&t,$time($£(i))),$×(m),$me,$×(c),Status Window,$×(d),$2,$×(r[5]),$7,$×(r[4]),$6,$×(r[3]),$5 $&
+    ,$×(r[2]),$4,$×(r[1]),$3,$×,&)
+}
+fnt {
+  if ($isid) return $iif($_cfgret(fnt),$ifmatch,0)
+  if ($left($1,1) == +) {
+    if ($right($1,-1) isnum) var %x $ifmatch
+    else var %x 1
+    if ($calc($iif($_cfgret(fnt),$ifmatch,0) + %x) < 5) _cfgset fnt $calc($iif($_cfgret(fnt),$ifmatch,0) + %x)
+    else _cfgset fnt 5
+    _cfgsave
+    _actallfonts
+    if ($2 != s) echo $color(highlight) -a $Ø($£(57),0,$ø(183),+ $+ %x)
+  }
+  elseif ($left($1,1) == -) {
+    if ($right($1,-1) isnum) var %x $ifmatch
+    else var %x 1
+    if ($calc($iif($_cfgret(fnt),$ifmatch,0) - %x) > -5) _cfgset fnt $calc($iif($_cfgret(fnt),$ifmatch,0) - %x)
+    else _cfgset fnt -5
+    _cfgsave
+    _actallfonts
+    if ($2 != s) echo $color(highlight) -a $Ø($£(57),0,$ø(183),- $+ %x)
+  }
+  elseif ($left($1,1) == =) {
+    if ($right($1,-1) isnum) var %x $ifmatch
+    if (%x >= 5) _cfgset fnt 5
+    elseif (%x < -5) _cfgset fnt -5
+    else _cfgset fnt %x
+    _cfgsave
+    _actallfonts
+    if ($2 != s) echo $color(highlight) -a $Ø($£(57),0,$ø(183),$1)
+  }
+  elseif ($2 != s) echo $color(highlight) -a $Ø($£(58),0,$ø(184))
+}
+_chargetheme {
+  background -l $_th.fill
+  ;cambiamos los colores por los del theme:
+  var %x = 1
+  _chrg2 21
+  while ($hmatch(theme,color*,%x)) { 
+    var %y = $replace($ifmatch $£($ifmatch),_,$chr(32))
+    var %y = $gettok(%y,2-,32)
+    if ($color($gettok(%y,1- $+ $calc($numtok(%y,32) -1),32)) != $gettok(%y,-1,32)) color $gettok(%y,1- $+ $calc($numtok(%y,32) -1),32) $gettok(%y,-1,32)
+    inc %x
+  }
+  _chrg2 30
+
+  ;y las cargamos:
+  ;quitamos las imágenes
+  background -mx
+  _chrg2 31
+  background -hx
+  _chrg2 34
+
+  ;enviamos comando a todos los servers de actualizar las fuentes
+  _actallfonts
+  _chrg2 45
+  ;y cargamos las imágenes:
+  _statbar
+  _chrg2 60
+  scid -a _loadindt s
+  _chrg2 65
+  _loadindt h
+  _chrg2 70
+  _loadindt m
+  _chrg2 75
+  writeini mirc.ini fonts fquery $iif($£(fquery),$ifmatch,Verdana) $+ , $+ $calc($iif($£(fquery.size),$ifmatch,9) + $fnt) $+ , $+ 1
+  writeini mirc.ini fonts list $iif($£(flist),$ifmatch,Verdana) $+ , $+ $calc($iif($£(flist.size),$ifmatch,9) + $fnt) $+ , $+ 1
+  _chrg2 80
+  ;Ponemos los timestamps:
+  .timestamp -f $replace($£(t),&t,$£(i))
+  .timestamp -s on
+  _chrg2 85
+  _ctms1
+  .timestamp -e on
+  _chrg2 100
+}
+_ctms1 scid -a _ctms2
+_ctms2 {
+  var %x = 1
+  while ($chan(%x)) {
+    if ($me ison $chan(%x)) cline $£(cnick.me) $chan(%x) $me
+    inc %x
+  }
+}
+_actallfonts {
+  font -d $chr(35) $calc($iif($£(fchannel.size),$ifmatch,9) + $fnt) $iif($£(fchannel),$ifmatch,Verdana)
+  scid -a _stfnts
+}
+_stfnts {
+  background -sx
+  font -s $calc($iif($£(fstatus.size),$ifmatch,9) + $fnt) $iif($£(fstatus),$ifmatch,Verdana)
+  var %x = 1 | while ($query(%x)) { font -d $ifmatch $calc($iif($£(fquery.size),$ifmatch,9) + $fnt) $iif($£(fquery),$ifmatch,Verdana) | inc %x }
+  var %x = 1 | while ($chat(%x)) { font -d $ifmatch $calc($iif($£(fquery.size),$ifmatch,9) + $fnt) $iif($£(fquery),$ifmatch,Verdana) | inc %x }
+  var %x = 1 | while ($chan(%x)) { font -d $ifmatch $calc($iif($£(fchannel.size),$ifmatch,9) + $fnt) $iif($£(fchannel),$ifmatch,Verdana) | inc %x }
+}
+_loadindt {
+  var %x = $£(back. $+ $1)
+  if (($isfile($+(user\theme\,$£(dir),\,$gettok(%x,2,42)))) && ($istokcs(c*f*n*r*t*p,$gettok(%x,1,42),42))) {
+    background - $+ $1 $+ $gettok(%x,1,42) $+(",user\theme\,$£(dir),\,$gettok(%x,2,42),")
+  }
+}
+_title titlebar + Mech Exp $+([,$_v,]-[L: $ø(0),]-[T: $£(0),]-[S: $hget(sounds,0),])
+
+_cfgset hadd cfg $1-
+_cfgret return $hget(cfg,$1)
+_cfgdel hdel cfg $1
+_cfgsave hsave -o cfg user\config\primary.Ecf
+
+_set hadd tmp $1-
+_ret return $hget(tmp,$1)
+_del hdel tmp $1
+
+_mode1 {
+  if (($1) && ($5)) {
+    var %x = 4,%z
+    while (%x <= $0) {
+      var %y = 1
+      while (%y <= $1) && ($calc(%y + %x) <= $0) { var %z = %z $gettok($1-,$calc(%x + %y),32) | inc %y }
+      mode $2 $+($3,$str($4,$calc(%y -1))) %z | var %z | inc %x $1
+    }
+  }
+}
+_mode2 {
+  if (($1) && ($7)) {
+    var %x = 6,%z
+    while (%x <= $0) {
+      var %y = 1
+      while (%y <= $int($calc($1 /2))) && ($calc(%y + %x) <= $0) { var %z = %z $gettok($1-,$calc(%x + %y),32) | inc %y }
+      mode $2 $+($3,$str($4,$calc(%y -1)),$5,$str($6,$calc(%y -1))) %z %z | var %z | inc %x $int($calc($1 /2))
+    }
+  }
+}
+_mode3 {
+  if (($1) && ($5)) {
+    var %x = 4,%z
+    while (%x <= $0) {
+      var %y = 1
+      while (%y <= $1) && ($calc(%y + %x) <= $0) { var %z = %z $address($gettok($1-,$calc(%x + %y),32),2) | inc %y }
+      mode $2 $+($3,$str($4,$calc(%y -1))) %z | var %z | inc %x $1
+    }
+  }
+}
+_kic {
+  var %x = 2
+  while (%x <= $0) {
+    kick $1 $ [ $+ [ %x ] ] $iif(%kick,$ifmatch,$£(1))
+    inc %x
+  }
+  unset %kick
+}
+
+_snd if ($hget(sounds,$1)) splay $+(",$mircdir,user\sounds\,$hget(sounds,dir),\,$hget(sounds,$1),")
+_net {
+  if ($left($1,3) == hop) return $_ret($1)
+}
+_res return $iif($isfile($+(sys\res\,$1,.Ers)),$read($+(sys\res\,$1,.Ers),n))
+clear {
+  clear $1-
+  var %x
+  if (!$1) {
+    if ($me ison $active) var %x $active
+  }
+  else {
+    if ($me ison $1) {
+      var %x $1
+    }
+  }
+  if (%x) {
+    hdel -w sttpd $cid $+ _ $+ %x $+ *_n
+    hdel -w sttpd $cid $+ _ $+ %x $+ *_t
+    hdel -w sttpd $cid $+ _ $+ %x $+ *_m
+  }
+}
+
+
+
+;// EOF

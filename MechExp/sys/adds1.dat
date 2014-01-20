@@ -1,0 +1,1438 @@
+;[Mech Exp] by LZ
+
+
+;// STTP
+alias _sttp _dialog sttp d
+alias _sttprun {
+  if ($sock(sttp)) {
+    sockclose sttp
+    _sttpe $¯(105)
+  }
+  if ($_cfgret(sttp)) {
+    if (!$portfree($_cfgret(sttpport))) {
+      if ($1 != s) _sttpe $¯(122) ( $+ $_cfgret(sttpport) $+ )
+      return
+    }
+    socklisten sttp $_cfgret(sttpport)
+    if ($1 != s) _sttpe $¯(104) $_cfgret(sttpport)
+  }
+}
+alias _sttpport return $iif($_cfgret(sttpport),$ifmatch,2080)
+alias _sttpmax return $iif($_cfgret(sttpmax),$ifmatch,30)
+alias _solonum {
+  var %x = 1,%y 
+  while (%x <= $len($1)) { if (($asc($mid($1,%x,1)) >= 48) && ($asc($mid($1,%x,1)) <= 57)) var %y = %y $+ $chr($ifmatch) | inc %x }
+  return $iif(%y > $2,$2,%y)
+}
+dialog sttp {
+  title $¯(100)
+  size -1 -1 224 133
+  icon sys\ico\STTP.ico
+  check $¯(34),1,2 2 100 22
+  text $¯(100), 2, 117 2 105 16, right
+  box $¯(101),3,2 26 218 72
+  edit $_sttpport,4,122 44 84 20,autohs,limit5
+  text $¯(102),5,12 46 106 16, right
+  text $¯(103),6,12 70 106 16, right
+  edit $_sttpmax $+ :,7,122 68 84 20,autohs,limit3
+  button $¯(38),8,3 104 107 25,ok
+  button $¯(39),9,113 104 107 25,cancel
+}
+on *:DIALOG:sttp:edit:4,7:{
+  if ($_solonum($did($did),$iif($did == 4,65535,100)) != $did($did)) {
+    did -r sttp $did
+    if ($ifmatch) did -a sttp $did $ifmatch
+  }
+}
+on *:DIALOG:sttp:init:0:if ($_cfgret(sttp)) did -c sttp 1
+on *:DIALOG:sttp:sclick:8:{
+  _cfgset sttp $did(1).state
+  _cfgset sttpport $did(4)
+  _cfgset sttpmax $did(7)
+  _sttprun
+}
+on *:SOCKLISTEN:sttp:{
+  var %x
+  while ((!%x) || ($isfile(temp\ $+ %x)) || ($sock(%x))) {
+    var %x = $+(sttp-,$rand(a,z),$rand(a,z),$rand(a,z),.stp)
+  }
+  sockaccept %x
+  if ($calc($sock(sttp-*,0) -5) >= $_cfgret(sttpmax)) sockclose %x
+  else .timer $+ %x 1 7 sockclose %x
+}
+on *:SOCKREAD:sttp-*:{
+  sockread %_sttp
+  tokenize 32 %_sttp
+  unset %_sttp
+  if ($1 == GET) {
+    if ($_ret(sttp) >= $_cfgret(sttpmax)) { sockclose %x | return }
+    .timer $+ $sockname off
+    _set sttp $calc($_ret(sttp) +1)
+    if (HTTP/1. isin $ [ $+ [ $0 ] ]) var %x = $_hrep($deltok($2-,-1,32))
+    else var %x = $_hrep($2-)
+    if ($chr(13) isin %x) { _sttpc $sockname | return }
+    _sttpe $sock($sockname).ip $¯(88) %x
+    if ($_sttpg($sockname,%x)) {
+      sockmark $sockname $+($sockname,$chr(13),$ifmatch,$chr(13),0,$chr(13),0)
+      _sttps $sockname
+    }
+  }
+}
+on *:SOCKCLOSE:sttp-*:sockclose $sockname | _sttpc $sockname
+on *:SOCKWRITE:sttp-*:_sttps $sockname
+alias -l _sttpe if (!$window(@STTP)) window -k @STTP sys\ico\STTP.ico | echo $color(info) @STTP ** $1-
+menu @STTP {
+  $iif($_cfgret(sttp),$style(1)) $¯(34):_cfgset sttp $iif($_cfgret(sttp),0,1) | _cfgsave | _sttprun
+}
+on *:CLOSE:@STTP:_cfgset sttp 0 | _cfgsave | _sttprun s
+alias -l _sttph {
+  $gettok($1-,1,9) <HTML>
+  $gettok($1-,1,9) <HEAD><TITLE>STTP</TITLE></HEAD>
+  $gettok($1-,1,9) <SCRIPT language=javascript>setTimeout("location.reload()", $+ $_reltime $+ );</SCRIPT>
+  $gettok($1-,1,9) <body bgcolor="#CCCCCC" text="#000000"><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
+}
+alias -l _sttpc {
+  if ($isfile(temp\ $+ $1)) .remove temp\ $+ $1
+  if ($sock($1).status == active) {
+    sockwrite -n $1 HTTP/1.1 200 OK
+    sockwrite -n $1 Connection: close
+    sockwrite -n $1 Content-Type: text/html
+    sockwrite -n $1 
+    _sttph sockwrite -nt $1 $+ 	 $+ $¯(89)
+    sockwrite -n $1 <P><table align=center><tr><td><font size=1> $+ $¯(89) ( $+ $chr(35) $+ $gettok($2,2,44) $+ )</font></td></tr></table></P>
+    _sttpb 1 sockwrite -nt $1
+    _sttpe $sock($1).ip $¯(91)
+  }
+  if ($sock($1)) {
+    sockclose $1
+    _set sttp $calc($_ret(sttp) -1)
+  }
+}
+alias -l _sttpc2 {
+  if ($isfile(temp\ $+ $1)) .remove temp\ $+ $1
+  if ($sock($1).status == active) {
+    sockwrite -n $1 HTTP/1.1 200 OK
+    sockwrite -n $1 Connection: close
+    sockwrite -n $1 Content-Type: text/html
+    sockwrite -n $1 
+    _sttph sockwrite -nt $1 $+ 	 $+ $¯(164)
+    sockwrite -n $1 <P><table align=center><tr><td><font size=1> $+ $¯(164) $+ </font></td></tr></table></P>
+    _sttpb 1 sockwrite -nt $1
+    _sttpe $sock($1).ip $¯(91)
+  }
+  if ($sock($1)) {
+    sockclose $1
+    _set sttp $calc($_ret(sttp) -1)
+  }
+}
+alias -l _chandump {
+  var %x = 1,%y
+  while (%x <= $chan(0)) {
+    var %y %y $chan(%x)
+    inc %x
+  }
+  _set ggd %y
+}
+alias -l _chanprop {
+  _set ggp.t $chan($1-).topic
+  _set ggp.m $chan($1-).mode
+  _set ggp.n $nick($1-,0)
+  _set ggp.k $chan($1-).key
+  _set ggp.s $chan($1-)
+  _set ggp.n $network
+  _set ggp.me $me
+  var %x = 0
+  while (%x <= $nick($1-,0)) {
+    _set ggp.u $+ %x $nick($1-,%x)
+    _set ggp.um $+ %x $_mnick2($nick($1-,%x),$1-)
+    inc %x
+  }
+}
+alias -l _auchan {
+  scid $_ret(gg) _chandump
+  return
+}
+alias -l _gcprop {
+  scid $_ret(gg) _chanprop $1-
+  return
+}
+alias -l _sttpb {
+  if ($1) $2- </P><P><table align=center><tr><td><font size=1><a href="/">[ $+ $¯(90) $+ ]</a></font></td></tr></table></p>
+  $2- <table border="1" width="100%"><tr><td><p><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
+  $2- $+($¯(93),: $time,<br>,$¯(163),: $scid(0),<br><br><br>)
+  var %yg = 1
+  while (%yg <= $scid(0)) {
+    var %xg = 1
+    _set gg $scon(%yg)
+    var %temp = $scon(%yg)._auchan
+    if ($scon(%yg).network) {
+      $2- $+(Nick: $scon(%yg).me,<br>,$¯(162),: $scon(%yg).network,<br>,$¯(92),: $scon(%yg).server,<br>,$¯(94) [,$numtok($_ret(ggd),32),],:<br><br>)
+      while (%xg <= $numtok($_ret(ggd),32)) {
+        var %temp = $_gcprop($gettok($_ret(ggd),%xg,32))
+        $2- <a href=" $+ $scon(%yg) $+ , $+ $asc($left($gettok($_ret(ggd),%xg,32),1)) $+ , $+ $right($gettok($_ret(ggd),%xg,32),-1) $+ "><b> $+ $gettok($_ret(ggd),%xg,32) $+ </b></a>
+        $2- $iif($_ret(ggp.m),[( $+ $replace($_ret(ggp.m),$_ret(ggp.k),*) $+ ) $_ret(ggp.n) $+ ],$chr(91) $+ $_ret(ggp.n) $+ ])
+        $2- <br> <b> $+ $¯(32) $+ :</b> $_sttptrat($_ret(ggp.t)) $+ <br><br>
+        inc %xg
+      }
+      $2- <br><br>
+    }
+    inc %yg
+  }
+  $2- </font></p></td></tr></table>
+  $2- </body>
+  $2- </HTML>
+}
+alias -l _sttptrat return $strip($replace($1,<,&lt;,>,&gt;))
+alias -l _sttps {
+  tokenize 13 $sock($1).mark
+  if ($3 == 0) {
+    sockwrite -n $1 HTTP/1.1 200 OK
+    sockwrite -n $1 Connection: close
+    sockwrite -n $1 Content-Type: text/html
+    sockwrite -n $1 
+  }
+  if (($sock($1).sq <= 8192) && (!$4)) {
+    bread $2 $3 8192 &d
+    sockwrite $1 &d
+    sockmark $1 $+($1,$chr(13),$2,$chr(13),$calc($3 + 8192),$chr(13),0)
+    tokenize 13 $sock($1).mark
+    if ($3 >= $lof($2)) {
+      sockmark $1 $1 $+($1,$chr(13),$2,$chr(13),$3,$chr(13),1)
+      _sttpe $sock($1).ip $¯(91)
+      sockclose $1
+      if ($isfile(temp\ $+ $1)) .remove temp\ $+ $1
+      _set sttp $calc($_ret(sttp) -1)
+    }
+  }
+}
+alias -l _mnick2 {
+  if ($1 isop $2) return @
+  if ($1 ishop $2) return %
+  if ($1 isvo $2) return +
+  return
+}
+alias -l _sttpg {
+  if ($2 == /) {
+    _sttph write temp\ $+ $1 $+ 	STTP - $¯(96)
+    write temp\ $+ $1 <P><table align=center width=100%><tr><td align=center><font size=1> $+ $¯(95) Mech Exp $_v $+ <br><a href=" $+ $strip($_w) $+ "> $+ $strip($_w) $+ </a></font></table>
+    _sttpb 0 write temp\ $+ $1
+    return temp\ $+ $1
+  }
+  else {
+    var %ask.network = $gettok($right($2,-1),1,44)
+    var %ask.channelm = $chr($gettok($right($2,-1),2,44))
+    var %ask.channel = %ask.channelm $+ $gettok($right($2,-1),3,44)
+    if (!$scid(%ask.network)) _sttpc2 $1 $chr(35) $+ $right($2,-1)
+    else {
+      scid %ask.network
+      var %_chan $chan(%ask.channel)
+      scid -r
+      if (!%_chan) { unset %_chan | _sttpc $1 $chr(35) $+ $right($2,-1) }
+      else {
+        unset %_chan
+        _set gg %ask.network
+        var %temp = $_gcprop(%ask.channel)
+        _sttph write temp\ $+ $1 $+ 	 $+ STTP - %y
+        write temp\ $+ $1 <P><table align=center width=100%><tr><td align=center><font size=1><table align=center><tr><td align=center><font size=1> $+ $¯(95) Mech Exp $_v $+ <br><a href=" $+ $strip($_w) $+ "> $+ $strip($_w) $+ </a></font></td></tr></table></P><P>
+        write temp\ $+ $1 <br><b> $+ $¯(98) %ask.channel ( $+ $_ret(ggp.n) $+ ) $+ </b><br>
+        write temp\ $+ $1 $_sttptrat($_ret(ggp.t)) $+ <br><br>
+        if ($_ret(ggp.m)) write temp\ $+ $1 <b> $+ $¯(99) $+ :</b> $replace($_ret(ggp.m),$_ret(ggp.k),*) $+ <br>
+        write temp\ $+ $1 $+(<b>,$¯(97),: </b>,$_ret(ggp.u0)) $+ <br><br><table width="" align=center><tr><td><table><tr><td>
+        write temp\ $+ $1 <textarea cols=69 rows=18>
+        var %x = $calc($hget(sttpd,%ask.network $+ _ $+ %ask.channel $+ _) +1)
+        var %y = $calc($hget(sttpd,%ask.network $+ _ $+ %ask.channel $+ _) + 10)
+        while (%x <= %y) {
+          var %z1 = $hget(sttpd,%ask.network $+ _ $+ %ask.channel $+ _ $+ %x $+ _m)
+          var %z2 = $hget(sttpd,%ask.network $+ _ $+ %ask.channel $+ _ $+ %x $+ _n)
+          var %z3 = $hget(sttpd,%ask.network $+ _ $+ %ask.channel $+ _ $+ %x $+ _t)
+          if ((%z1) && (%z2) && (%z3)) write temp\ $+ $1 $+([,%z1,] <,%z2,> %z3)
+          inc %x
+        }
+        write temp\ $+ $1 </textarea>
+        write temp\ $+ $1 <textarea cols="15" rows="18">
+        var %x = 1
+        while (%x <= $_ret(ggp.u0)) {
+          write temp\ $+ $1 $+($_ret(ggp.um $+ %x),$_ret(ggp.u $+ %x))
+          inc %x
+        }
+        write temp\ $+ $1 </textarea>
+        write temp\ $+ $1 </td></tr></table></td></tr></table>
+        _sttpb 1 write temp\ $+ $1
+        hdel -w tmp ggp.*
+        return temp\ $+ $1
+      }
+    }
+  }
+}
+alias -l _hrep {
+  _set hr1 $1
+  _set hr2 $count($_ret(hr1),%)
+  while ($_ret(hr2) != 0) {
+    _set hr3 $chr($base($mid($_ret(hr1),$calc($pos($_ret(hr1),%,1) +1),2),16,10))
+    _set hr4 $mid($_ret(hr1),$pos($_ret(hr1),%,1),3)
+    _set hr1 $replace($_ret(hr1),$_ret(hr4),$_ret(hr3))
+    _set hr2 $calc($_ret(hr2) - 1)
+  }
+  _set $_ret(hr1) $replacecs($_ret(hr1),√°,·,√†,‡,√§,‰,√¢,‚,√©,È,√®,Ë,√´,Î,√™,Í,√≠,Ì,√¨,Ï,√Ø,Ô,√Æ,Ó,√≥,Û,√≤,Ú,√∂,ˆ,√¥,Ù,√∫,˙,√π,˘,√º,¸,√ª,˚)
+  _set $_ret(hr1) $replacecs($_ret(hr1),√Å,¡,√Ä,¿,√Ñ,ƒ,√Ç,¬,√â,…,√à,»,√ã,À,√ä, ,√ç,Õ,√å,Ã,√è,œ,√é,Œ,√ì,”,√í,“,√ñ,÷,√î,‘,√ö,⁄,√ô,Ÿ,√ú,‹,√õ,€)
+  return $replace($_ret(hr1),√±,Ò,√ë,—)
+}
+alias _sttpdin {
+  var %x = $hget(sttpd,$1 $+ _ $+ $2 $+ _),%y = 10
+  inc %x
+  hadd sttpd $1 $+ _ $+ $2 $+ _ %x
+  hadd sttpd $1 $+ _ $+ $2 $+ _ $+ $calc(%x + %y) $+ _n $_sttplr($3)
+  hadd sttpd $1 $+ _ $+ $2 $+ _ $+ $calc(%x + %y) $+ _t $_sttplr($4)
+  hadd sttpd $1 $+ _ $+ $2 $+ _ $+ $calc(%x + %y) $+ _m $time(HH:nn:ss)
+  hdel sttpd $1 $+ _ $+ $2 $+ _ $+ $calc(%x) $+ _n
+  hdel sttpd $1 $+ _ $+ $2 $+ _ $+ $calc(%x) $+ _t
+  hdel sttpd $1 $+ _ $+ $2 $+ _ $+ $calc(%x) $+ _m
+}
+alias -l _sttplr return $replace($1,<,&lt;,>,&gt;,Ò,&ntilde;)
+alias _xcl scid -a _xxcl
+alias _xxcl {
+  var %x = 1
+  while ($chan(%x)) {
+    hdel -w sttpd $cid $+ _ $+ $ifmatch $+ *_n
+    hdel -w sttpd $cid $+ _ $+ $ifmatch $+ *_t
+    hdel -w sttpd $cid $+ _ $+ $ifmatch $+ *_m
+    inc %x
+  }
+}
+alias -l _reltime return 15000
+
+
+;// Scanner de puertos
+alias _portscan _dialog portscan d
+alias -l _defports return 1-30,80,110,135,1080,2080,3128,8080,65535
+alias -l _randip return $iif(($_cfgret(portscan.lastip)) && ($_cfgret(portscan.lastip) != 0.0.0.0),$ifmatch,127.0.0.1)
+alias -l _solonum2 {
+  var %x = 1,%y 
+  while (%x <= $len($1)) { 
+    if (($asc($mid($1,%x,1)) >= 48) && ($asc($mid($1,%x,1)) <= 57)) var %y = %y $+ $chr($ifmatch)
+    if (($mid($1,%x,1) == ,) || ($mid($1,%x,1) == -)) var %y = %y $+ $ifmatch
+    inc %x 
+  }
+  return %y
+}
+
+dialog portscan {
+  title $¯(123)
+  size -1 -1 367 309
+  icon sys\ico\PortScan.ico, 0
+  edit , 1, 66 18 216 20,autohs,limit300
+  edit , 2, 66 38 216 20, autohs,limit300
+  edit , 3, 66 58 216 20, autohs,limit5
+  edit , 4, 66 78 216 20, autohs,limit3
+  text IP/Host:, 6, 8 20 56 16, right
+  text $¯(125), 7, 8 40 56 16, right
+  text $¯(129), 8, 8 60 56 16, right
+  text $¯(132), 9, 8 80 56 16, right
+  button $¯(124), 10, 285 38 74 20
+  button $¯(124), 11, 285 58 74 20
+  button $¯(124), 12, 285 78 74 20
+  box $¯(101), 13, 2 2 363 101
+  text "Portscanner", 14, 291 19 58 16
+  list 15, 1 104 365 176, sort size
+  button $¯(126), 16, 2 282 74 24
+  button $¯(127), 17, 144 283 77 24
+  button $¯(128), 18, 291 283 74 24, cancel
+}
+alias -l _scport did -a portscan 15 2 + 0 $1 $+ 	+ 0 0 0 $2 $+ 	+ 0 0 0 $3 $+ 	+ 0 0 0 $readini(sys\res\Ports.Ers,n,Ports,$2) $+ 	+ 0 0 0 $4
+
+on *:DIALOG:portscan:init:0:{
+  _mdx SetMircVersion $version
+  _mdx MarkDialog portscan
+  _mdx SetControlMDX portscan 15 listview rowselect grid showsel single headerdrag report > sys\dll\views.mdx
+  did -i portscan 15 1 headerdims 95:1 60:2 80:3 110:4 0:5
+  did -i portscan 15 1 headertext + 0 IP	 $+ $iif($right($¯(102),1) == :,$left($¯(102),-1),$¯(102)) $+ 	 $+ $¯(130) $+ 	 $+ $¯(131) $+ 	 $+ †
+  did -ra portscan 1 $_randip
+  did -ra portscan 2 $iif($_cfgret(portscan.lastports),$ifmatch,$_defports)
+  did -ra portscan 3 $iif($_cfgret(portscan.lastmax),$ifmatch,20)
+  did -ra portscan 4 $iif($_cfgret(portscan.lasttime),$ifmatch,7)
+  _del portscan
+  _del portscan2
+
+}
+on *:DIALOG:portscan:dclick:15:{
+  var %x $gettok($did(portscan,15).seltext,1,9)
+  var %ip $gettok(%x,$numtok(%x,32),32)
+  var %x $gettok($did(portscan,15).seltext,2,9)
+  var %port $gettok(%x,$numtok(%x,32),32)
+  var %x $gettok($did(portscan,15).seltext,5,9)
+  var %stat $gettok(%x,$numtok(%x,32),32)
+  if (%stat == 1) telnet %ip %port
+}
+on *:DIALOG:portscan:sclick:*:{
+  if ($did == 18) {
+    _cfgset portscan.lastip $did(portscan,1)
+    _cfgset portscan.lastports $did(portscan,2)
+    _cfgset portscan.lastmax $did(portscan,3)
+    _cfgset portscan.lasttime $did(portscan,4)
+    _scanend
+  }
+  if ($did == 17) did -r portscan 15
+  if ($did == 16) {
+    if (!$_ret(portscan2)) {
+      if (($did(1)) && ($did(2)) && ($did(3)) && ($did(4))) {
+        did -r portscan 15
+        did -ra portscan 16 $¯(161)
+        did -ra portscan 17 $¯(161)
+        did -ra portscan 18 $¯(161)
+        var %t = $numrate($did(2))
+        did -ra portscan 16 $¯(133)
+        did -ra portscan 17 $¯(127)
+        did -ra portscan 18 $¯(128)
+        _set portscan2 1
+        did -b portscan 1,2,3,4,10,11,12
+        _scannext
+      }
+    }
+    else _scanend
+  }
+  if ($did == 10) did -ra portscan 2 $_defports
+  if ($did == 11) did -ra portscan 3 20
+  if ($did == 12) did -ra portscan 4 7
+}
+on *:DIALOG:portscan:edit:3,4:{
+  if ($_solonum($did($did),$iif($did == 3,50,60)) != $did($did)) {
+    did -r portscan $did
+    if ($ifmatch) did -a portscan $did $ifmatch
+  }
+}
+on *:DIALOG:portscan:edit:2:{
+  if ($_solonum2($did(2)) != $did($did)) {
+    did -r portscan 2
+    if ($ifmatch) did -a portscan 2 $ifmatch
+  }
+}
+alias _scannext {
+  while (($sock(_scanner-*,0) <= $did(portscan,3)) && ($_ret(portscan2) <= $hget(portscan,0).item)) {
+    var %x
+    while (($sock(%x)) || (!%x)) var %x = _scanner- $+ $rand(a,z) $+ $rand(a,z) $+ $rand(a,z) $+ $rand(a,z)
+    sockopen %x $did(portscan,1) $hget(portscan,$_ret(portscan2))
+    .timer $+ %x 1 $did(portscan,4) sockclose %x $chr(124) _scport $did(portscan,1) $hget(portscan,$_ret(portscan2)) $¯(135) 0 $chr(124) _scannext
+    _set portscan2 $calc($_ret(portscan2) +1)
+  }
+  if (($_ret(portscan2) > $hget(portscan,0).item) && ($sock(_scanner-*,0) == 0)) _scanend
+}
+alias _scanend {
+  .timer_scanner-* off
+  sockclose _scanner-*
+  if ($hget(portscan)) hfree portscan
+  _del portscan2 1
+  if ($dialog(portscan)) {
+    did -e portscan 1,2,3,4,10,11,12
+    did -ra portscan 16 $¯(126)
+  }
+}
+on *:SOCKOPEN:_scanner-*:{
+  .timer $+ $sockname off
+  var %x = $sock($sockname).ip $sock($sockname).port
+  _scport %x $iif($sockerr,$¯(135) 0,$¯(134) 1) 1
+  sockclose $sockname
+  _scannext
+  if (($_ret(portscan2) > $hget(portscan,0).item) && ($sock(_scanner-*,0) == 0)) _scanend
+}
+
+
+;// IPSee
+alias -l _ip if (($2 != n/a) && ($2)) echo $color(highlight) -s $ÿ($£(27),0,$1,$2)
+on *:FILERCVD:*:_ip $nick $send($nick).ip
+on *:SENDFAIL:*:_ip $nick $send($nick).ip
+on *:FILESENT:*:_ip $nick $send($nick).ip
+on *:GETFAIL:*:_ip $nick $send($nick).ip
+on *:OPEN:=:_ip $nick $chat($nick).ip
+ctcp ^*:DCC CHAT*:_ip $nick $longip($4)
+ctcp ^*:DCC SEND*:_ip $nick $longip($gettok($1-,$calc($0 -2),32))
+
+
+;// Socktelnet
+dialog socktelnet {
+  title $¯(112)
+  size -1 -1 200 106
+  option pixels
+  icon sys\ico\Telnet.ico, 0
+  edit $_res(ips), 1, 60 18 130 20,autohs,limit300
+  edit , 2, 60 42 130 20,limit5
+  box $¯(117), 6, 2 2 196 72
+  text IP:, 3, 6 20 50 16, right
+  button $¯(165), 4, 4 80 74 24
+  button $¯(128), 5, 122 80 74 24, cancel
+  text $¯(102), 7, 6 44 50 16, right
+}
+alias _telnetd _dialog socktelnet d
+on *:DIALOG:socktelnet:init:0:_set stINIT 0 | did -a socktelnet 2 $gettok($_res(ports),1,61)
+on *:DIALOG:socktelnet:edit:1,2:{
+  if (!$_ret(stINIT)) { _set stINIT 1 | did -r socktelnet 1,2 }
+  if ($did == 2) {
+    if ($_solonumt($did(2),65535) != $did(2)) {
+      did -r socktelnet 2
+      if ($ifmatch) did -a socktelnet 2 $ifmatch
+    }
+  }
+}
+on *:DIALOG:socktelnet:mouse:*:{
+  if (($mouse.x >= 60) && ($mouse.x <= 190) && ($mouse.y >= 17) && ($mouse.y <= 59)) {
+    if (!$_ret(stINIT)) { 
+      _set stINIT 1
+      did -r socktelnet 1,2
+    }
+  }
+}
+alias -l _solonumt {
+  var %x = 1,%y 
+  while (%x <= $len($1)) { if (($asc($mid($1,%x,1)) >= 48) && ($asc($mid($1,%x,1)) <= 57)) var %y = %y $+ $chr($ifmatch) | inc %x }
+  return $iif(%y > $2,$2,%y)
+}
+on *:DIALOG:socktelnet:sclick:*:{
+  if ($did == 4) {
+    if (!$_ret(stINIT)) { did -r socktelnet 1,2 | return }
+    else {
+      if ((!$did(1)) || (!$did(2)) || ($did(2) !isnum)) return
+      telnet $did(1) $did(2)
+    }
+  }
+}
+
+alias -l _ttitle if ($window($1)) titlebar $1 $+([,$iif($sock($1),$sock($1).mark $sock($1).status,$¯(116)),])
+alias telnet {
+  var %x,%y
+  if ((: isin $1) && (!$2)) var %x = $gettok($1,1,58),%y = $gettok($1,2,58)
+  elseif ($2 isnum) var %x = $1,%y = $2
+  if ((!%x) || (!%y) || (%y !isnum)) { _error $¯(108) | return }
+  var %z
+  while (($sock(%z)) || ($window(%z)) || (!%z)) var %z = @telnet- $+ $rand(a,z) $+ $rand(a,z) $+ $rand(a,z)
+  sockopen %z %x %y
+  sockmark %z $+(%x,:,%y)
+  window -aek %z @telnet sys\ico\telnet.ico
+  echo $color(info) %z $ÿ(&t) * $¯(110) $+(%x,:,%y)
+  _ttitle %z
+}
+on *:SOCKOPEN:@telnet-*:{
+  var %x = $sockname
+  if ($sockerr) {
+    echo $color(info) %x $ÿ(&t) * $sock(%x).wsmsg
+    sockclose %x
+  }
+  else echo $color(info) %x $ÿ(&t) * $¯(111) $sock($sockname).mark
+  _ttitle %x
+}
+on *:CLOSE:@telnet-*:{ 
+  if ($sock($target)) {
+    echo $color(info) -s $ÿ(&t) $¯(109) $sock($target).mark
+    sockclose $target
+  }
+}
+on *:INPUT:@telnet-*:{
+  if ($sock($active)) {
+    echo $color(normal) -a $ÿ(&t) $iif($_cfgret(bsend),Bin)  $+ $color(own) $+ > $1-
+    sockwrite $+(-t,$iif(!$_cfgret(bsend),n)) $active $1-
+  }
+  else {
+    beep
+    echo $color(normal) -a $ÿ(&t) $¯(115)
+  }
+  halt
+}
+on *:SOCKREAD:@telnet-*:{
+  if ($sockerr) {
+    echo $color(info) $sockname $ÿ(&t) * $sock($sockname).wsmsg
+    sockclose $sockname
+    return
+  }
+  sockread &d
+  var %x = 1,%y
+  while (%x <= $bvar(&d,0)) {
+    if (($bvar(&d,%x) == 13) && ($bvar(&d,$calc(%x +1)) == 10)) {
+      inc %x 2
+      echo $color(normal) $sockname $ÿ(&t)  $+ $color(info) $+ > %y
+      var %y
+    }
+    %y = $iif($bvar(&d,%x) == 32,%y $chr(32),$+(%y,$chr($bvar(&d,%x))))
+    if ($len(%y) == 900) {
+      echo $color(normal) $sockname $ÿ(&t)  $+ $color(info) $+ > %y
+      var %y
+    }
+    inc %x
+  }
+  if (%y) echo $color(normal) $sockname $ÿ(&t) Bin  $+ $color(info) $+ > %y
+}
+on *:SOCKCLOSE:@telnet-*:{
+  var %x = $sockname
+  sockclose %x
+  _ttitle %x
+  echo $color(info) %x $ÿ(&t) * $¯(114)
+}
+menu @telnet {
+  $¯(117):telnet 0
+  $iif(!$sock($active),$style(2)) $¯(118):if ($sock($active)) { echo $color(info) -a $ÿ(&t) * $¯(109) $sock($active).mark | sockclose $active | _ttitle $active }
+  -
+  $iif($sock($active).status != active,$style(2)) $¯(119):{
+    if ($sock($active).status == active) { echo $color(normal) -a $ÿ(&t)  $+ $color(own) $+ > | sockwrite -nt $active }
+    else { beep | echo $color(normal) -a $ÿ(&t) $¯(115) }
+  }
+  -
+  $iif($_cfgret(bsend),$style(1)) $¯(120):_cfgset bsend $iif($_cfgret(bsend),0,1)
+  -
+  $¯(121):clear $active
+}
+
+
+;// Nick completion
+alias _nickcomp _dialog nickcomp d
+dialog nickcomp {
+  title $¯(85)
+  size -1 -1 266 128
+  icon sys\ico\NickComp.ico, 0
+  edit , 3, 2 24 180 20, autohs,limit90
+  edit ,10, 2 54 180 20, autohs
+  button $¯(84), 11, 188 20 74 28, ok
+  text "&&n = nick, &&n1 = n, &&n2 = k", 12, 14 6 128 16
+  button $¯(38), 13, 8 100 106 24
+  button $¯(39), 14, 114 100 106 24, cancel
+  button $¯(87), 1, 188 50 74 28
+  check $¯(154),2,10 77 178 20
+}
+on *:DIALOG:nickcomp:edit:3:_actcmp
+on *:DIALOG:nickcomp:init:0:{
+  _mdx SetMircVersion $version
+  _mdx MarkDialog nickcomp
+  _mdx SetControlMDX nickcomp 10 richedit nohidesel read autohs > sys\dll\ctl_gen.mdx
+  if ($_cfgret(cmpmayus)) did -c nickcomp 2
+  did -a nickcomp 3 $_comp
+  _actcmp r
+}
+on *:DIALOG:nickcomp:sclick:*:{
+  if ($did == 1) {
+    did -ra nickcomp 3 $_res(cmps)
+    _actcmp
+  }
+  if ($did == 500) { halt }
+  if ($did == 11) { 
+    _actcmp r
+    halt
+  }
+  if ($did == 13) { 
+    if (&n !isin $did(3)) {
+      did -ra nickcomp 3 $did(3) $+ &n
+    }
+    _cfgset cmp $did(3)
+    _cfgset cmpmayus $did(nickcomp,2).state
+    _cfgsave
+    dialog -x nickcomp 
+  }
+}
+alias -l _actcmp {
+  if ($1 == r) _set ncr $_res(Nicks)
+  did -o nickcomp 10 1 text +m <mech> hi, $replace($iif(&n !isin $did(3),$did(3) $+ &n,$did(3)),&,$◊,$◊ $+ n1,$left($_ret(ncr),1),$◊ $+ n2,$right($_ret(ncr),1),$◊ $+ n,$_ret(ncr),$◊,&) $+ $iif($right($did(3),1) != ,)
+}
+alias -l _comp return $iif($_cfgret(cmp),$ifmatch,&n)
+alias _cmp {
+  return $replace($_comp,&,$◊,$◊ $+ n1,$left($1,1),$◊ $+ n2,$right($1,1),$◊ $+ n,$1,$◊,&) $+ $iif($right($_comp,1) != ,)
+}
+alias _cmpb {
+  var %x = 1
+  _set x
+  while (%x <= $numtok($1,32)) {
+    _set y $gettok($1,%x,32)
+    _set x $_ret(x) $iif($_ret(y) ison $2,$iif($_cfgret(cmpmayus),$_cmp($nick(#,$nick(#,$_ret(y)))),$_cmp($_ret(y))),$_ret(y))
+    inc %x
+  }
+  return $_ret(x)
+}
+
+
+;// Web completion
+alias _webcomp _dialog webcomp d
+dialog webcomp {
+  title $¯(166)
+  size -1 -1 266 128
+  icon sys\ico\WebComp.ico, 0
+  edit $_cfgret(wcmp), 3, 2 24 180 20, autohs,limit90
+  edit ,10, 2 54 180 20, autohs
+  text $¯(168), 12, 13 6 166 16
+  button $¯(84), 11, 188 20 74 28, ok
+  button $¯(38), 13, 8 100 106 24
+  button $¯(39), 14, 114 100 106 24, cancel
+  button $¯(87), 1, 188 50 74 28
+}
+on *:DIALOG:webcomp:init:0:{
+  _mdx SetMircVersion $version
+  _mdx MarkDialog webcomp
+  _mdx SetControlMDX webcomp 10 richedit nohidesel read autohs > sys\dll\ctl_gen.mdx
+  _actwcmp r
+}
+on *:DIALOG:webcomp:edit:3:_actwcmp
+on *:DIALOG:webcomp:sclick:*:{
+  if ($did == 1) {
+    did -ra webcomp 3 $_res(wcmps)
+    _actwcmp
+  }
+  if ($did == 500) { halt }
+  if ($did == 11) { 
+    _actwcmp r
+    halt
+  }
+  if ($did == 13) { 
+    _cfgset wcmp $did(3)
+    _cfgsave
+    dialog -x webcomp 
+  }
+}
+alias _actwcmp {
+  if ($1 == r) _set wcr $_res(Webs)
+  did -o webcomp 10 1 text +m <mech> $did(3) $+ $_ret(wcr) $+ 
+}
+alias _wcomp return $iif($_cfgret(wcmp),$ifmatch,&n)
+alias _wcmp {
+  return $_wcomp $+ $iif($right($_wcomp,1) != ,)
+}
+alias _wcmpb {
+  var %x = 1
+  _set x
+  while (%x <= $numtok($1,32)) {
+    _set y $gettok($1,%x,32)
+    _set x $_ret(x) $iif($_cfgret(wcmp),$ifmatch $+ $gettok($1,%x,32) $+ ,$gettok($1,%x,32))
+    inc %x
+  }
+  return $_ret(x)
+}
+
+
+;// Replacer
+alias _replacer _dialog replacer d
+dialog replacer {
+  title $¯(57)
+  size -1 -1 198 298
+  icon sys\ico\Replacer.ico, 0
+  check $¯(34), 8, 4 9 52 13
+  list 9, 12 45 175 163,sort,extsel
+  box $¯(55), 10, 4 30 192 237
+  edit , 11, 12 208 68 19,autohs,limit70
+  edit , 12, 120 208 68 19,autohs,limit70
+  button $¯(36), 13, 12 230 86 28,ok
+  button $¯(37), 14, 101 230 86 28
+  button $¯(38), 15, 12 273 85 23
+  button $¯(39), 16, 102 273 85 23,cancel
+  text Replacer, 17, 148 2 50 13
+  text $¯(56),2,79 211 42 13,center
+}
+on *:DIALOG:replacer:init:0:{
+  _mdx SetMircVersion $version
+  _mdx MarkDialog replacer
+  _mdx SetControlMDX replacer 9 listview rowselect grid showsel headerdrag report > sys\dll\views.mdx
+  did -i replacer 9 1 headerdims 75:1 80:2
+  did -i replacer 9 1 headertext + 0 $¯(61) 	 $¯(62)
+  var %x = 1
+  while (%x <= $hget(replace,0).item) {
+    did -i replacer 9 2 $gettok($hget(replace,%x).item,1,32) 	 $hget(replace,$hget(replace,%x).item)
+    inc %x 
+  }
+  if ($_cfgret(replace)) did -c replacer 8
+}
+on *:DIALOG:replacer:dclick:9:{
+  did -ra replacer 11 $gettok($gettok($did(replacer,9).seltext,1,9),6-,32)
+  did -ra replacer 12 $gettok($gettok($did(replacer,9).seltext,2,9),5-,32)
+}
+on *:DIALOG:replacer:sclick:*:{
+  if ($did == 13) { 
+    if ($len($did(11))) {
+      if ($didwm(replacer,9,0* $gettok($did(11),1,32) 	*)) {
+        did -d replacer 9 $didwm(replacer,9,0* $gettok($did(11),1,32) 	*)
+      }
+      did -i replacer 9 2 $gettok($did(11),1,32) 	 $did(12) $+ $iif(($right($did(12),1) != ) && ($strip($did(12)) != $did(12)),)
+      if (!$_cfgret(replacer-f)) {
+        did -c replacer 8
+        _cfgset replacer-f 1
+      }
+    }
+    halt
+  }
+  if ($did == 14) {
+    var %x 1
+    while (%x <= $did(9,0).sel) {
+      if ($did(9,%x).sel) did -d replacer 9 $ifmatch
+    }
+  }
+  if ($did == 9) {
+    if (!$did(replacer,9).seltext) did -r replacer 11,12
+    else {
+      tokenize 32 $gettok($did(replacer,9).seltext,1,9)
+      did -ra replacer 11 $6-
+      tokenize 32 $gettok($did(replacer,9).seltext,2,9)
+      did -ra replacer 12 $5-
+    }
+  }
+  if ($did == 15) {
+    hdel -w replace *
+    var %x = 2
+    while (%x <= $did(9).lines) { 
+      if ($did(replacer,9,%x)) {
+        hadd replace $gettok($gettok($did(replacer,9,%x),1,9),6-,32) $gettok($gettok($did(replacer,9,%x),2,9),5-,32)
+      }
+      inc %x 
+    }
+    hsave -o replace user\config\replace.Ecf
+    _cfgset replace $did(8).state
+    dialog -x replacer replacer
+  }
+}
+alias _rep {
+  if (!$_cfgret(replace)) return $1
+  var %x = 1,%y
+  _set y
+  while (%x <= $numtok($1,32)) {
+    var %y = $hget(replace,$gettok($1,%x,32))
+    _set y $_ret(y) $iif($hfind(replace,$gettok($1,%x,32)).item,%y,$gettok($1,%x,32))
+    inc %x
+  }
+  return $_ret(y)
+}
+alias _coloURL {
+  var %x = 1
+  _set x
+  while (%x <= $numtok($1,32)) {
+    _set x $_ret(x) $iif((http://???* iswm $gettok($1,%x,32)) || (www.???* iswm $gettok($1,%x,32)),$+($_wcmpb($gettok($1,%x,32))),$gettok($1,%x,32)))
+    inc %x
+  }
+  return $_ret(x)
+}
+
+
+;// Shit-List
+alias _slist _dialog shitlist d
+alias _shitlist if (!$_cfgret(shitlist)) return | var %x = 1 | while ($hget(shitlist,%x).item) { if ($ifmatch iswm $1) return 1 | inc %x }
+alias _shitsave hsave -o shitlist user\config\shitlist.Ecf
+alias _address return $iif($address($1,$2),$ifmatch,$1 $+ !NO@IAL)
+alias _xslist {
+  _chrg2 0
+  _chrg2 10
+  _chrg2 30
+  scid -a _xxslist
+  _chrg2 99
+  _chrg2 100
+}
+alias _xxslist {
+  var %x = 1
+  while ($chan(%x)) {
+    if ($me isop $chan(%x)) _xxxslist $chan(%x)
+    inc %x
+  }
+}
+alias _xxxslist {
+  var %x = 1
+  while ($nick($1,%x)) {
+    if ($_shitlist($_address($ifmatch,5))) _shitkick $1 $nick($1,%x) $_address($nick($1,%x),2)
+    inc %x 
+  } 
+}
+on @*:JOIN:#:if (!$_cfgret(shitlist)) return | if ($_shitlist($_address($nick,5))) _shitkick # $nick $_address($nick,2)
+on *:NICK:{
+  if (!$_cfgret(shitlist)) return
+  if ($_shitlist($_address($newnick,5))) { 
+    var %x = 1
+    while ($comchan($newnick,%x)) { 
+      if ($me isop $ifmatch) _shitkick $comchan($newnick,%x) $newnick $_address($newnick,2)
+      inc %x 
+    }
+  }
+}
+alias _shitkick {
+  if (!$_cfgret(shitlist)) return
+  if ($_ret(slkick) > $calc($ctime -4)) { .timer 1 $calc($ifmatch - $ctime +4) _skick $1- | _set slkick $calc($ifmatch +4) }
+  else { _set slkick $ctime | _skick $1- }
+}
+alias _skick {
+  if (($2 != $me) && ($me isop $1)) { 
+    mode $1 $+($iif($2 isop $1,-o),+bb $iif($2 isop $1,$2)) $2 $3
+    if ($2 ison $1) kick $1 $2 Shit listed! $£(1)
+  }
+}
+dialog shitlist {
+  option pixel
+  size -1 -1 198 298
+  title ShitList
+  icon sys\ico\ShitList.ico
+  check $¯(34),8, 4 9 52 13
+  list 9, 12 45 175 163, sort,extsel
+  box $¯(35),10, 4 30 192 237
+  edit $_res(masks),11,12 208 175 19,autohs,limit300
+  button $¯(36),12, 12 230 86 28,ok
+  button $¯(37),13, 101 230 86 28
+  text ShitList,14, 156 2 40 13
+  button $¯(38),15, 12 273 85 23
+  button $¯(39),16, 102 273 85 23,cancel
+}
+on *:DIALOG:shitlist:init:0:{
+  _set slINIT 0
+  var %x = 1
+  while (%x <= $hget(shitlist,0).item) { did -a shitlist 9 $hget(shitlist,%x).item | inc %x }
+  if ($_cfgret(shitlist)) did -c shitlist 8
+}
+on *:DIALOG:shitlist:edit:11:if (!$_ret(slINIT)) { _set slINIT 1 | did -r shitlist 11 }
+on *:DIALOG:shitlist:sclick:*:{
+  if ($did == 12) {
+    if (!$_ret(slINIT)) { did -r shitlist 11 | halt }
+    if (($did(11)) && ((! !isin $did(11)) || (@ !isin $did(11)))) { 
+      if (. !isin $did(11)) did -o shitlist 11 1 $remove($did(11),!,@) $+ !*@*
+      else did -o shitlist 11 1 *!*@ $+ $remove($did(11),!,@)
+      halt 
+    }
+    if ($did(11)) {
+      var %a = 0,%x = $did(shitlist,9).lines,%y = 1,%z =  $replace($did(11),$chr(32),?)
+      while (%y <= %x) {
+        if (%z == $did(shitlist,9,%y)) var %a = 1
+        inc %y
+      }
+      if (!%a) did -a shitlist 9 %z
+      did -r shitlist 11
+      if (!$_cfgret(shitlist-f)) {
+        did -c shitlist 8
+        _cfgset shitlist-f 1
+      }
+    }
+    halt
+  }
+  if ($did == 9) {
+    if (!$did(shitlist,9).seltext) did -r shitlist 11
+    else did -ra shitlist 11 $did(shitlist,9).seltext
+  }
+  if ($did == 13) {
+    var %x 1
+    while (%x <= $did(9,0).sel) {
+      if ($did(9,%x).sel) did -d shitlist 9 $ifmatch
+    }
+  }
+  if ($did == 15) {
+    hdel -w shitlist *
+    var %x = 1
+    while (%x <= $did(9).lines) { hadd shitlist $did(shitlist,9,%x) | inc %x }
+    _shitsave
+    _cfgset shitlist $did(8).state
+    dialog -x shitlist shitlist
+    _xslist
+  }
+}
+on *:DIALOG:shitlist:mouse:10:{
+  if (($mouse.x >= 15) && ($mouse.x <= 80) && ($mouse.y >= 211) && ($mouse.y <= 222)) {
+    if (!$_ret(slINIT)) { 
+      _set slINIT 1
+      did -r shitlist 11
+    }
+  }
+}
+
+
+;// Hotkeys
+alias _efekeys _dialog efekeys d
+dialog efekeys {
+  title $¯(50)
+  size -1 -1 330 200
+  option pixels
+  icon sys\ico\Rapidas.ico, 0
+  list 1, 2 4 326 158
+  edit F1, 2, 2 147 70 20, read
+  edit , 3, 76 147 182 20, autohs,limit700
+  button $¯(79), 4, 260 147 67 20, ok
+  button $¯(38), 5, 4 172 157 24
+  button $¯(39), 6, 169 172 157 24, cancel
+}
+on *:DIALOG:efekeys:init:0:{
+  _mdx SetMircVersion $version
+  _mdx MarkDialog efekeys
+  _mdx SetControlMDX efekeys 1 listview rowselect grid showsel single headerdrag report > sys\dll\views.mdx
+  did -i efekeys 1 1 headerdims 95:1 201:2
+  did -i efekeys 1 1 headertext + 0 $¯(77) 	 $¯(78)
+  var %x = 12
+  while (%x >= 1) {
+    did -i efekeys 1 2 Shift+F $+ %x 	 $_cfgret(Shift+F $+ %x)
+    did -i efekeys 1 2 Ctrl+F $+ %x 	 $_cfgret(Ctrl+F $+ %x)
+    did -i efekeys 1 2 F $+ %x 	 $_cfgret(F $+ %x)
+    dec %x
+  }
+}
+on *:DIALOG:efekeys:sclick:*:{
+  if ($did == 1) { 
+    did -ra efekeys 2 $gettok($did(efekeys,1).seltext,6,32)
+    did -ra efekeys 3 $gettok($did(efekeys,1).seltext,11-,32)
+  }
+  if ($did == 4) {
+    did -o efekeys 1 $didwm(efekeys,1,0* $did(2) 	*)) $did(efekeys,2) 	 $did(efekeys,3)
+    halt
+  }
+  if ($did == 5) {
+    var %x = 12
+    while (%x >= 1) {
+      _cfgset Shift+F $+ %x $gettok($gettok($did(efekeys,1,$didwm(efekeys,1,0* Shift+F $+ %x   	*)),2,9),5-,32)
+      _cfgset Ctrl+F $+ %x $gettok($gettok($did(efekeys,1,$didwm(efekeys,1,0* Ctrl+F $+ %x   	*)),2,9),5-,32)
+      _cfgset F $+ %x $gettok($gettok($did(efekeys,1,$didwm(efekeys,1,0* F $+ %x   	*)),2,9),5-,32)
+      dec %x
+    }
+    _cfgsave
+    dialog -x efekeys efekeys
+  }
+}
+
+
+;// Away
+alias _away _dialog away d
+dialog away {
+  title $¯(178)
+  size -1 -1 465 198
+  option pixels
+  icon sys\ico\Away.ico, 0
+  edit $_elaway, 3, 12 49 365 20, autohs
+  edit , 10, 12 79 365 20, autohs
+  button $¯(84), 11, 382 45 74 28,ok
+  text , 12, 15 29 344 16
+  button $¯(38), 13, 16 171 106 24
+  button $¯(39), 14, 122 171 106 24, cancel
+  button $¯(87), 1, 382 75 74 28
+  radio $¯(175), 4, 15 117 150 20
+  radio $¯(176), 5, 15 137 150 20
+  edit "", 6, 168 137 284 21,autohs
+  check $¯(181), 2, 18 2 201 20
+}
+alias _elaway return $iif($_cfgret(away),$ifmatch,[AWAY &s] &m)
+on *:DIALOG:away:init:0:{
+  _mdx SetMircVersion $version
+  _mdx MarkDialog away
+  _mdx SetControlMDX away 10 richedit nohidesel read autohs > sys\dll\ctl_gen.mdx
+  if ($_cfgret(pregaway) == 0) did -c away 5
+  else did -c away 4
+  _actawy r
+  did -ra away 12 &&m = $¯(177), &&s = ON/OFF, &&r = on/off
+  did -ra away 6 $iif($_cfgret(awaymotivo),$ifmatch,$¯(180))
+  if ($_cfgret(awayanuncio) != 0) did -c away 2
+  _ponelmotivo
+  _ponelanuncio
+}
+on *:DIALOG:away:sclick:*:{
+  _ponelmotivo
+  _ponelanuncio
+  if ($did == 1) {
+    did -ra away 3 $_res(aways)
+    _actawy
+  }
+  if ($did == 11) { 
+    _actawy r
+    halt
+  }
+  if ($did == 13) { 
+    if (((&s !isin $did(3)) && (&r !isin $did(3))) || (&m !isin $did(3))) {
+      if ((&s !isin $did(3)) && (&r !isin $did(3))) did -ra away 3 $did(3) [&s]
+      if (&m !isin $did(3)) did -ra away 3 $did(3) [&m]
+    }
+    else { 
+      _cfgset away $did(3)
+      if ($did(away,4).state == 1) _cfgset pregaway 1
+      else _cfgset pregaway 0
+      if ($did(away,2).state == 0) _cfgset awayanuncio 0
+      else _cfgset awayanuncio 1
+      _cfgset awaymotivo $iif((($did(6)) && ($did(6) !== $¯(180))),$did(6))
+      _ponelmotivo
+      _cfgsave
+      dialog -x away
+    }
+  }
+}
+alias -l _ponelanuncio {
+  if ($did(2).state == 1) did -e away 3,10,1,11
+  if ($did(2).state == 0) did -b away 3,10,1,11
+}
+alias -l _ponelmotivo {
+  if ($did(4).state == 1) did -b away 6
+  if ($did(4).state == 0) did -e away 6
+}
+alias -l _actcmp {
+  if ($1 == r) _set ncr $_res(Nicks)
+  did -o nickcomp 10 1 text +m <mech> hi, $replace($iif(&n !isin $did(3),$did(3) $+ &n,$did(3)),&,$◊,$◊ $+ n1,$left($_ret(ncr),1),$◊ $+ n2,$right($_ret(ncr),1),$◊ $+ n,$_ret(ncr),$◊,&) $+ $iif($right($did(3),1) != ,)
+}
+
+alias _actawy {
+  if ($1 == r) {
+    _set awycr $_res(motvs)
+    _set awyrrand $rand(0,1)
+  }
+  var %x $_ret(awycr)
+  var %yrand = $_ret(awyrrand)
+  did -o away 10 2
+  did -o away 10 1 text +m $replace(6* mech $replace($did(3),&,$◊,$◊ $+ s,$iif(%yrand == 1,ON,OFF),$◊ $+ r,$iif(%yrand == 1,on,off),$◊ $+ m,%x,$◊,&),,6)
+}
+on *:DIALOG:away:edit:3:_actawy
+alias _awy {
+  return $replace($_elaway,&,$◊,$◊ $+ s,$1,$◊ $+ r,$lower($1),$◊ $+ m,$2,$◊,&)
+}
+dialog awinput {
+  title Away
+  size -1 -1 338 84
+  option pixels
+  edit , 1, 4 30 330 20, result,autohs,limit500
+  text $¯(182), 2, 4 8 330 16
+  button $¯(38), 3, 6 56 88 24, ok
+  button $¯(39), 4, 244 56 88 24, cancel
+}
+on *:DIALOG:awinput:init:0:_set awinput 0
+on *:DIALOG:awinput:sclick:4:_set awinput 1
+alias awinput {
+  var %x = $dialog(awinput,awinput,-2)
+  if ($_ret(awinput) == 1) {
+    _set awinput 0
+    return
+  }
+  _set awinput 0
+  if (%x == $null) return -
+  else return %x
+}
+alias _pidemotivo {
+  if ($_cfgret(pregaway) != 0) {
+    if ($awinput) return $ifmatch
+    else return
+  }
+  else return $iif($_cfgret(awaymotivo),$ifmatch,$¯(180))
+}
+alias _setawayON {
+  if ($1 != r) {
+    if ($_pidemotivo) var %x = $ifmatch
+    else return
+  }
+  else var %x = $_ret(awmot. $+ $cid)
+  _set awmot. $+ $cid %x
+  _set awstt. $+ $cid 1
+  if ($_ret(awist. $+ $cid)) _del awist. $+ $cid
+  if ($status == connected) {
+    !away %x
+    if (($1 != r) && ($_cfgret(awayanuncio) != 0)) ame $_awy(ON,%x)
+  }
+  _awaybutact
+}
+alias _setawayOFF {
+  _set awid. $+ $cid $ctime
+  _set awid $ctime
+  if ($_ret(awstt. $+ $cid)) {
+    _del awstt. $+ $cid
+    if ($status == connected) !away
+  }
+  elseif ($away) !away
+  if ($status == connected) {
+    if (($_cfgret(awayanuncio) != 0) && ($status == connected)) ame $_awy(OFF,$_ret(awmot. $+ $cid))
+    _del awmot. $+ $cid %x
+  }
+  _awaybutact
+}
+alias _butaway {
+  if ($_ret(awstt. $+ $cid)) _setawayOFF
+  else _setawayON
+}
+alias _awaybutact {
+  var %x = $iif($_ret(awstt. $+ $cid),1,0)
+  if (($_ret(lastbutawy) != %x) || ($1 == f)) {
+    if (($£(awaybut.x) isnum) && ($£(awaybut.y) isnum)) {
+      var %file = $+(user\theme\,$£(dir),\,$iif(%x == 1,$£(awayon),$£(awayoff)))
+      if ($exists(%file)) drawpic @_bar $£(awaybut.x) $£(awaybut.y) %file
+    }
+    _set lastbutawy %x
+  }
+}
+
+
+;// Font sizes
+dialog fontsizes {
+  title $¯(185)
+  size -1 -1 120 80
+  icon sys\ico\Fontsize.ico, 0
+  option pixels
+  button "-", 1, 20 12 18 20
+  edit $fnt, 2, 38 12 42 20, disable,center
+  button "+", 3, 80 12 18 20
+  button $¯(128), 4, 22 48 74 24,ok
+}
+on *:DIALOG:fontsizes:sclick:*:{
+  if ($did == 3) fnt + s
+  if ($did == 1) fnt - s
+  did -o fontsizes 2 1 $iif($left($fnt,1) isin +-,$fnt,$iif($fnt == 0,0,+ $+ $fnt))
+}
+alias _fontsizes _dialog fontsizes d
+
+
+;// Autoaway
+alias _awayidle _dialog awayidle d
+dialog awayidle {
+  title $¯(187)
+  size -1 -1 222 288
+  option pixels
+  icon sys\ico\Awayidle.ico, 0
+  check $¯(34), 1, 2 4 250 20
+  text $¯(188), 2, 20 28 187 16
+  edit "", 4, 46 47 40 21, disable,center
+  button "-", 3, 27 47 19 21
+  button "+", 5, 87 47 19 21
+  text $¯(189), 6, 20 74 187 16
+  edit "", 7, 19 94 190 21,autohs,limit200
+  radio $¯(190), 8, 19 136 189 20
+  radio $¯(191), 9, 19 182 189 20
+  text $¯(192), 10, 20 119 187 16
+  text $¯(193), 11, 20 154 193 27
+  text $¯(194), 12, 20 200 193 27
+  button $¯(38), 13, 22 259 75 25,ok
+  button $¯(39), 14, 125 259 75 25, cancel
+  text $¯(195), 15, 111 50 95 16
+  check $¯(197), 16, 19 230 196 20
+}
+on *:DIALOG:awayidle:init:0:{
+  if ($_awayidlest) did -c awayidle 1
+  if ($_awayidleanun) did -c awayidle 16
+  if ($_awayidleunifs) did -c awayidle 9
+  else did -c awayidle 8
+  did -a awayidle 4 $iif($_cfgret(awayidletime),$ifmatch,15)
+  did -a awayidle 7 $_awayidlemotv
+}
+alias _awayidlemotv return $iif($_cfgret(awayidlemotv),$_cfgret(awayidlemotv),$¯(198))
+on *:DIALOG:awayidle:sclick:*:{
+  if ($did == 3) {
+    if ($did(4) > 5) did -o awayidle 4 1 $calc($did(4) - 1)
+  }
+  if ($did == 5) {
+    if ($did(4) <= 59) did -o awayidle 4 1 $calc($did(4) + 1)
+  }
+  if ($did == 13) {
+    _cfgset awayidletime $did(4)
+    _cfgset awayidle $did(1).state
+    _cfgset awayidleanun $did(16).state
+    _cfgset awayidlemotv $iif(($did(7)) && ($did(7) !== $¯(198)),$did(7))
+    if ($did(9).state) _cfgset awayidleunifs 1
+    else _cfgset awayidleunifs 0
+    _cfgsave
+    dialog -x awayidle
+  }
+}
+
+alias _awayidletime return $iif($_cfgret(awayidletime) != $null,$ifmatch,15)
+alias _awayidlest return $iif($_cfgret(awayidle) != $null,$ifmatch,0)
+alias _awayidleanun return $iif($_cfgret(awayidleanun) != $null,$ifmatch,1)
+alias _awayidleunifs return $iif($_cfgret(awayidleunifs) != $null,$ifmatch,1)
+
+
+;// Lector de logs
+alias _leclogs {
+  if (!$window(@Logs)) {
+    window -Sl18kbe @Logs @Logs sys\ico\logs.ico
+    window -a @Logs
+    _listlogs
+  }
+  else window -a @Logs
+}
+menu @Logs {
+  dclick:{
+    _loadlog
+  }
+  $¯(6):run user\logs
+  -
+  $¯(270):_listlogs
+  $iif($sline(@Logs,1),$¯(272)):_loadlog
+  -
+  $¯(121):clear
+}
+alias -l _listlogs {
+  clear @Logs
+  clear -l @Logs
+  echo $color(normal) @Logs $¯(273)
+  var %x = $findfile(user\logs\,*.log,0,0,aline -l @Logs $nopath($left($1-,-4)))
+  if (%x) echo $color(normal) @Logs $¯(274)
+  else echo $color(normal) @Logs $¯(271)
+}
+alias -l _loadlog {
+  if ($exists(user\logs\ $+ $sline(@Logs,1) $+ .log)) {
+    clear @Logs
+    loadbuf @Logs user\logs\ $+ $sline(@Logs,1) $+ .log
+  }
+}
+on *:INPUT:@Logs:halt
+on ^*:INPUT:@Logs:halt
+
+
+;// CTCP Version
+alias _versionchanger _dialog versionchanger d
+dialog versionchanger {
+  title $¯(266)
+  size -1 -1 392 292
+  option pixels
+  icon sys\ico\version.ico, 0
+  text $¯(248), 1, 16 1 365 17
+  edit ,2,9 23 374 21,limit400,autohs
+  list 3,9 44 374 182, size
+  edit ,4,9 239 374 21,autohs
+  button $¯(38), 5, 5 266 184 25, ok
+  button $¯(39), 6, 203 265 184 25, cancel
+}
+on *:DIALOG:versionchanger:init:0:{
+  _mdx SetMircVersion $version
+  _mdx MarkDialog versionchanger
+  _mdx SetControlMDX versionchanger 4 richedit nohidesel read autohs > sys\dll\ctl_gen.mdx
+  var %x = $lines(sys\res\version.Ers),%y = 1
+  while (%y <= %x) {
+    did -a versionchanger 3 $chr(32) $read(sys\res\version.Ers,n,%y)
+    inc %y
+  }
+  if ($_cfgret(verreply)) did -o versionchanger 2 1 $ifmatch
+  _vchgprv
+}
+on *:DIALOG:versionchanger:sclick:3:{
+  did -o versionchanger 2 1 $did(versionchanger,3).seltext
+  _vchgprv
+}
+on *:DIALOG:versionchanger:sclick:5:_cfgset verreply $did(versionchanger,2) | _cfgsave
+on *:DIALOG:versionchanger:edit:2:_vchgprv
+alias _vprv return $replace($1,&n,$2,&v,$_v,&w,$_w)
+alias _vreply return $_vprv($_cfgret(verreply),$1)
+alias -l _vchgprv did -o versionchanger 4 1 text +m $_vprv($did(versionchanger,2), $read(sys\res\Nicks.Ers,n))
+
+
+;// Autojoin
+alias _autojoin _dialog autojoin d
+alias _ajoinsave hsave -o autojoin user\config\autojoin.Ecf
+dialog autojoin {
+  option pixel
+  size -1 -1 198 298
+  title Autojoin
+  icon sys\ico\autojoin.ico
+  check $¯(34),8, 4 9 52 13
+  list 9, 12 45 175 163, sort,extsel
+  box ,10, 4 30 192 237
+  edit $_res(chans),11,12 208 175 19,autohs,limit400
+  button $¯(36),12, 12 230 86 28,ok
+  button $¯(37),13, 101 230 86 28
+  text Autojoin,14, 156 2 40 13
+  button $¯(38),15, 12 273 85 23
+  button $¯(39),16, 102 273 85 23,cancel
+}
+on *:DIALOG:autojoin:init:0:{
+  _set ajINIT 0
+  var %x = 1
+  while (%x <= $hget(autojoin,0).item) { did -a autojoin 9 $hget(autojoin,%x).item | inc %x }
+  if ($_cfgret(autojoin)) did -c autojoin 8
+}
+on *:DIALOG:autojoin:edit:11:if (!$_ret(ajINIT)) { _set ajINIT 1 | did -r autojoin 11 }
+on *:DIALOG:autojoin:sclick:*:{
+  if ($did == 12) {
+    if (!$_ret(ajINIT)) { did -r autojoin 11 | halt }
+    if ($did(11)) {
+      did -a autojoin 9 $did(11)
+      did -r autojoin 11
+      if (!$_cfgret(autojoin-f)) {
+        did -c autojoin 8
+        _cfgset autojoin-f 1
+      }
+    }
+    halt
+  }
+  if ($did == 13) {
+    var %x 1
+    while (%x <= $did(9,0).sel) {
+      if ($did(9,%x).sel) did -d autojoin 9 $ifmatch
+    }
+  }
+  if ($did == 15) {
+    hdel -w autojoin *
+    var %x = 1
+    while (%x <= $did(9).lines) { hadd autojoin $did(autojoin,9,%x) | inc %x }
+    _ajoinsave
+    _cfgset autojoin $did(8).state
+    dialog -x autojoin autojoin
+  }
+}
+on *:DIALOG:autojoin:mouse:10:{
+  if (($mouse.x >= 15) && ($mouse.x <= 80) && ($mouse.y >= 211) && ($mouse.y <= 222)) {
+    if (!$_ret(ajINIT)) { 
+      _set ajINIT 1
+      did -r autojoin 11
+    }
+  }
+}
+
+
+;// Modifier
+alias _modifier _dialog modifier d
+dialog modifier {
+  title $¯(239)
+  size -1 -1 198 298
+  icon sys\ico\modifier.ico, 0
+  check $¯(34), 8, 4 9 52 13
+  list 9, 12 45 175 163,sort,extsel
+  box $¯(55), 10, 4 30 192 237
+  edit , 11, 12 208 68 19,autohs,limit70
+  edit , 12, 120 208 68 19,autohs,limit150
+  button $¯(36), 13, 12 230 86 28,ok
+  button $¯(37), 14, 101 230 86 28
+  button $¯(38), 15, 12 273 85 23
+  button $¯(39), 16, 102 273 85 23,cancel
+  text Modifier, 17, 148 2 50 13
+  text $¯(56),2,79 211 42 13,center
+}
+on *:DIALOG:modifier:init:0:{
+  _mdx SetMircVersion $version
+  _mdx MarkDialog modifier
+  _mdx SetControlMDX modifier 9 listview rowselect grid showsel headerdrag report > sys\dll\views.mdx
+  did -i modifier 9 1 headerdims 75:1 80:2
+  did -i modifier 9 1 headertext + 0 $¯(61) 	 $¯(62)
+  var %x = 1
+  while (%x <= $hget(thememod,0).item) {
+    did -i modifier 9 2 $gettok($hget(thememod,%x).item,1,32) 	 $hget(thememod,$hget(thememod,%x).item)
+    inc %x 
+  }
+  if ($_cfgret(thememod)) did -c modifier 8
+}
+on *:DIALOG:modifier:dclick:9:{
+  did -ra modifier 11 $gettok($gettok($did(modifier,9).seltext,1,9),6-,32)
+  did -ra modifier 12 $gettok($gettok($did(modifier,9).seltext,2,9),5-,32)
+}
+on *:DIALOG:modifier:sclick:*:{
+  if ($did == 9) {
+    if (!$did(modifier,9).seltext) did -r modifier 11,12
+    else {
+      tokenize 32 $gettok($did(modifier,9).seltext,1,9)
+      did -ra modifier 11 $6-
+      tokenize 32 $gettok($did(modifier,9).seltext,2,9)
+      did -ra modifier 12 $5-
+    }
+  }
+  if ($did == 13) { 
+    if ($len($did(11))) {
+      if ($didwm(modifier,9,0* $gettok($did(11),1,32) 	*)) {
+        did -d modifier 9 $didwm(modifier,9,0* $gettok($did(11),1,32) 	*)
+      }
+      did -i modifier 9 2 $gettok($did(11),1,32) 	 $did(12) $+ $iif(($right($did(12),1) != ) && ($strip($did(12)) != $did(12)),)
+      if (!$_cfgret(modifier-f)) {
+        did -c modifier 8
+        _cfgset modifier-f 1
+      }
+    }
+    halt
+  }
+  if ($did == 14) {
+    var %x 1
+    while (%x <= $did(9,0).sel) {
+      if ($did(9,%x).sel) did -d modifier 9 $ifmatch
+    }
+  }
+  if ($did == 15) {
+    hdel -w thememod *
+    var %x = 2
+    while (%x <= $did(9).lines) { 
+      if ($did(modifier,9,%x)) {
+        hadd thememod $gettok($gettok($did(modifier,9,%x),1,9),6-,32) $gettok($gettok($did(modifier,9,%x),2,9),5-,32)
+      }
+      inc %x 
+    }
+    hsave -o thememod user\config\thememod.Ecf
+    _cfgset thememod $did(8).state
+    _changetheme $_cfgret(t)
+    _chargetheme
+    dialog -x modifier modifier
+  }
+}
+
+
+
+;// EOF

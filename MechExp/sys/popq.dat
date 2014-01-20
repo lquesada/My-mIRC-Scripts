@@ -1,0 +1,23 @@
+$iif(($$1 isignore) || ($$1 $+ !*@* isignore),$ø(70)):ignore -r $$1-
+$iif(($$1 !isignore) && ($$1 $+ !*@* !isignore),$ø(69)):ignore $$1
+$iif($$1 isnotify,$ø(73)):notify -r $$1-
+$iif($$1 !isnotify,$ø(72)):notify $$1
+-
+Whois:whois $$1
+Whois (Idle):whois $$1 $$1
+InfoCentral:uwho $$1
+-
+$ø(83):say $£(1) $_joke
+-
+CTCP
+.Ping:ctcp $$1 ping
+.Finger:ctcp $$1 finger
+.Time:ctcp $$1 time
+.Version:ctcp $$1 version
+DCC
+.$ø(75):dcc send $$1
+.$ø(76):dcc chat $$1
+-
+$ø(250):say Mech Exp $_v for mIRC $+ $_vm - $_w
+-
+;// EOF

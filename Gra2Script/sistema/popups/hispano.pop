@@ -1,0 +1,337 @@
+;Gra2 Script por LZ.
+menu @barra {
+  $iif($mouse.x > 581 && $mouse.x < 629 && $mouse.y > 1 && $mouse.y < 35 && irc-hispano.org isin $server,NiCK)
+  .$iif(%hispanick == $me || %hispanick2 == $me || %hispanick3 == $me || %hispanick4 == $me || %hispanick5 == $me,AutoIdentificar):{
+    if (%hispanick == $me) && (%hispapass)  && (%autoidenth == si) { _.hid } 
+    if (%hispanick2 == $me) && (%hispapass2) && (%autoidenth2 == si) { _.hid dos } 
+    if (%hispanick3 == $me) && (%hispapass3)  && (%autoidenth3 == si) { _.hid tres } 
+    if (%hispanick4 == $me) && (%hispapass4)  && (%autoidenth4 == si) { _.hid cuatro } 
+    if (%hispanick5 == $me) && (%hispapass5)  && (%autoidenth5 == si) { _.hid cinco } 
+  }
+  .Identificar (Manual):.msg NiCK@deep.space identify $$?="Contraseña para el nick $me $+ ?"  
+  .Registrar nick:.msg NiCK@deep.space register $$?="tu e-mail?"
+  .-
+  .Protección Kill 1 min:.msg NiCK@deep.space set kill on
+  .Protección Kill 20 secs:.msg NiCK@deep.space set kill quick
+  .Protección Kill OFF:.msg NiCK@deep.space set kill off
+  .-
+  .Cambiar clave:.msg NiCK@deep.space set password $$?="tu nueva password?"
+  .Recupera nick:.msg NiCK@deep.space recover $$?="Nick?" $$?="Pass?"
+  $iif($mouse.x > 581 && $mouse.x < 629 && $mouse.y > 1 && $mouse.y < 35 && irc-hispano.org isin $server,CHaN)
+  .Registros
+  ..Ver nivel de usuarios de un canal:.msg CHaN access $$?="Canal? (con #)" list
+  ..Ver nivel de un usuario:.msg CHaN access $$?="Canal? (con #)" list $$?="Nick?"
+  ..Añadir Usuario:.msg CHaN access $$?="Canal? (con #)" add $$?="Nick a agregar?" $$?="Level para el usuario?"
+  ..Modificar nivel de usuario:.msg CHaN access $$?="Canal? (con #)" add $$?="Nick a agregar?" $$?="Level para el usuario?"
+  ..Borrar Usuario:.msg CHaN access $$?="Canal? (con #)" del $$?="Nick a quitar?"
+  .Opciones de canal
+  ..Debug
+  ...Activar:.msg CHaN set $$?="Canal? (con #)" debug on
+  ...Desactivar:.msg CHaN set $$?="Canal? (con #)" debug off
+  ..Mensaje Bienvenida:.msg CHaN set $$?="Canal? (con #)" entrymsg $$?="Mensaje de Bienvenida?"
+  ..Define topic:.msg CHaN set $$?="Canal? (con #)" topic $$?="Introduce topic"
+  ..Ops solo registrados
+  ...Encender:.msg CHaN set $$?="Canal? (con #)" secureops on
+  ...Apagar:.msg CHaN set $$?="Canal? (con #)" secureops off
+  ..Entran solo registrados
+  ...Encender:.msg CHaN set $$?="Canal? (con #)" secure on
+  ...Apagar:.msg CHaN set $$?="Canal? (con #)" secure off
+  ..Candado de topic
+  ...Encender:var %tmp $$?="Canal? (con #)" | if (!%tmp) return | .msg CHaN set %tmp return keeptopic on | .msg CHaN set %tmp topiclock on
+  ...Apagar:var %tmp $$?="Canal? (con #)" | if (!%tmp) return | .msg CHaN set %tmp return keeptopic off | .msg CHaN set %tmp topiclock on
+  ..Candado de modos:.msg CHaN set $$?="Canal? (con #)" mlock $$?="Modos? (recomendado: +nt-ilkpms )"
+  .Levels
+  ..Listar:.msg CHaN levels $$?="Canal?" (con #)" list
+  ..-
+  ..AUTOOP
+  ...Cambiar AUTOOP:.msg CHaN levels $$?="Canal? (con #)" set AUTOOP $$?="level nuevo?"
+  ...Desactivar AUTOOP:.msg CHaN levels $$?="Canal? (con #)" des AUTOOP
+  ..AUTOVOICE
+  ...Cambiar AUTOVOICE:.msg CHaN levels $$?="Canal? (con #)" set AUTOVOICE $$?="Level nuevo?"
+  ...Desactivar AUTOVOICE:.msg CHaN levels $$?="Canal? (con #)" des AUTOVOICE
+  ..AUTODEOP
+  ...Cambiar AUTODEOP:.msg CHaN levels $$?="Canal? (con #)" set AUTODEOP $$?="level nuevo? (recomendado -1)"
+  ...Desactivar AUTODEOP:.msg CHaN levels $$?="Canal? (con #)" des AUTODEOP
+  ..NOJOIN
+  ...Cambiar NOJOIN:.msg CHaN levels $$?="Canal? (con #)" set NOJOIN $$?="Level nuevo? (SI ES DISTINTO A -1 SERAN KICKEADOS TODOS DEL CANAL)"
+  ...Desactivar NOJOIN:.msg CHaN levels $$?="Canal? (con #)" des NOJOIN
+  ..AKICK
+  ...Cambiar AKICK:.msg CHaN levels $$?="Canal? (con #)" set AKICK $$?="Level nuevo?"
+  ...Desactivar AKICK:.msg CHaN levels $$?="Canal? (con #)" des AKICK
+  ..SET
+  ...Cambiar SET:.msg CHaN levels $$?="Canal? (con #)" set SET $$?="Level nuevo?"
+  ...Desactivar SET:.msg CHaN levels $$?="Canal? (con #)" des SET
+  ..CLEAR
+  ...Cambiar CLEAR:.msg CHaN levels $$?="Canal? (con #)" set CLEAR $$?="Level nuevo?"
+  ...Desactivar CLEAR:.msg CHaN levels $$?="Canal? (con #)" des CLEAR
+  ..UNBAN
+  ...Cambiar UNBAN:.msg CHaN levels $$?="Canal? (con #)" set UNBAN $$?="Level nuevo?"
+  ...Desactivar UNBAN:.msg CHaN levels $$?="Canal? (con #)" des UNBAN
+  ..OPDEOP
+  ...Cambiar OPDEOP:.msg CHaN levels $$?="Canal? (con #)" set OPDEOP $$?="Level nuevo?"
+  ...Desactivar OPDEOP:.msg CHaN levels $$?="Canal? (con #)" des OPDEOP
+  ..ACC-LIST
+  ...Cambiar ACC-LIST:.msg CHaN levels $$?="Canal? (con #)"  set ACC-LIST $$?="Level nuevo?"
+  ...Desactivar ACC-LIST:.msg CHaN levels $$?="Canal? (con #)" des ACC-LIST 
+  ..ACC-CHANGE
+  ...Cambiar ACC-CHANGE:.msg CHaN levels $$?="Canal? (con #)"  set ACC-CHANGE $$?="Level nuevo?"
+  ...Desactivar ACC-CHANGE:.msg CHaN levels $$?="Canal? (con #)" des ACC-CHANGE
+  ..INVITE
+  ...Cambiar INVITE:.msg CHaN levels $$?="Canal? (con #)" set INVITE $$?="Level nuevo?"
+  ...Desactivar INVITE:.msg CHaN levels $$?="Canal? (con #)" des INVITE
+  .-
+  .Control
+  ..Dar Op:.msg CHaN op $$?="Canal? (con #)" $$?="Nick a dar op?"
+  ..Quitar Op:.msg CHaN deop $$?="Canal? (con #)" $$?="Nick a quitar op?"
+  $iif($mouse.x > 581 && $mouse.x < 629 && $mouse.y > 1 && $mouse.y < 35 && irc-hispano.org isin $server,MeMo)
+  .Enviar mensaje:.msg MeMo send $$?="Enviar a?" $$?="Mensaje a enviar?"
+  .Listar mensajes:.msg MeMo List
+  .Listar nuevos:.msg MeMo List new
+  .Leer un mensaje:.msg MeMo read $$?="Numero de mensaje a leer? (Listalos para ver el numero)"
+  .Leer ultimo:.msg MeMo read last
+  .Eliminar mensaje:.msg MeMo del $$?="Numero de mensaje a borrar? (Listalos para ver el numero)"
+  .Eliminar todos: .msg MeMo del ALL
+  $iif($mouse.x > 581 && $mouse.x < 629 && $mouse.y > 1 && $mouse.y < 35 && irc-hispano.org isin $server,CReG)
+  .Registro canal:if ($$?!="Necesitarás buscar 24 apoyos en menos de 7 días... además necesitas tener registrado el nick, Continuar?" == $true) { set %cregtemp2 $$?="Canal a registrar? (con #)" | set %cregtemp3 $$?*="Escriba password de fundador" | set %cregtemp4 $$?="Introduzca una pequeña descripcion del canal" | .msg creg registra %cregtemp2 %cregtemp3 %cregtemp4 | unset %cregtemp* }
+  .Apoya canal:.msg creg apoya $$?="Canal? (con #)" | echo -s 6Sigue las instrucciones del bot.
+  .Ver los apoyos de tu canal:.msg creg apoyos $$?="Canal? (con #)"
+  .Ver los apoyos que has dado:.msg creg apoyos $me
+  -
+  $iif($mouse.x > 581 && $mouse.x < 629 && $mouse.y > 1 && $mouse.y < 35 && irc-hispano.org isin $server,Ayudas)
+  .Ayuda CHaN: .msg CHaN help
+  .Ayuda NiCK: .msg NiCK help
+  .Ayuda MEMO: .msg MeMo help
+  .Ayuda CReG: .msg CReG ayuda
+}
+menu menubar {
+  -
+  $iif(irc-hispano.org isin $server,Bots)
+  .CHaN
+  ..Registros
+  ...Ver nivel de usuarios de un canal:.msg CHaN access $$?="Canal? (con #)" list
+  ...Ver nivel de un usuario:.msg CHaN access $$?="Canal? (con #)" list $$?="Nick?"
+  ...Añadir Usuario:.msg CHaN access $$?="Canal? (con #)" add $$?="Nick a agregar?" $$?="Level para el usuario?"
+  ...Modificar nivel de usuario:.msg CHaN access $$?="Canal? (con #)" add $$?="Nick a agregar?" $$?="Level para el usuario?"
+  ...Borrar Usuario:.msg CHaN access $$?="Canal? (con #)" del $$?="Nick a quitar?"
+  ..Opciones de canal
+  ...Debug
+  ....Activar:.msg CHaN set $$?="Canal? (con #)" debug on
+  ....Desactivar:.msg CHaN set $$?="Canal? (con #)" debug off
+  ...Mensaje Bienvenida:.msg CHaN set $$?="Canal? (con #)" entrymsg $$?="Mensaje de Bienvenida?"
+  ...Define topic:.msg CHaN set $$?="Canal? (con #)" topic $$?="Introduce topic"
+  ...Ops solo registrados
+  ....Encender:.msg CHaN set $$?="Canal? (con #)" secureops on
+  ....Apagar:.msg CHaN set $$?="Canal? (con #)" secureops off
+  ...Entran solo registrados
+  ....Encender:.msg CHaN set $$?="Canal? (con #)" secure on
+  ....Apagar:.msg CHaN set $$?="Canal? (con #)" secure off
+  ...Candado de topic
+  ....Encender:var %tmp $$?="Canal? (con #)" | if (!%tmp) return | .msg CHaN set %tmp return keeptopic on | .msg CHaN set %tmp topiclock on
+  ....Apagar:var %tmp $$?="Canal? (con #)" | if (!%tmp) return | .msg CHaN set %tmp return keeptopic off | .msg CHaN set %tmp topiclock on
+  ...Candado de modos:.msg CHaN set $$?="Canal? (con #)" mlock $$?="Modos? (recomendado: +nt-ilkpms )"
+  ..Levels
+  ...Listar:.msg CHaN levels $$?="Canal?" (con #)" list
+  ...-
+  ...AUTOOP
+  ....Cambiar AUTOOP:.msg CHaN levels $$?="Canal? (con #)" set AUTOOP $$?="level nuevo?"
+  ....Desactivar AUTOOP:.msg CHaN levels $$?="Canal? (con #)" des AUTOOP
+  ...AUTOVOICE
+  ....Cambiar AUTOVOICE:.msg CHaN levels $$?="Canal? (con #)" set AUTOVOICE $$?="Level nuevo?"
+  ....Desactivar AUTOVOICE:.msg CHaN levels $$?="Canal? (con #)" des AUTOVOICE
+  ...AUTODEOP
+  ....Cambiar AUTODEOP:.msg CHaN levels $$?="Canal? (con #)" set AUTODEOP $$?="level nuevo? (recomendado -1)"
+  ....Desactivar AUTODEOP:.msg CHaN levels $$?="Canal? (con #)" des AUTODEOP
+  ...NOJOIN
+  ....Cambiar NOJOIN:.msg CHaN levels $$?="Canal? (con #)" set NOJOIN $$?="Level nuevo? (SI ES DISTINTO A -1 SERAN KICKEADOS TODOS DEL CANAL)"
+  ....Desactivar NOJOIN:.msg CHaN levels $$?="Canal? (con #)" des NOJOIN
+  ...AKICK
+  ....Cambiar AKICK:.msg CHaN levels $$?="Canal? (con #)" set AKICK $$?="Level nuevo?"
+  ....Desactivar AKICK:.msg CHaN levels $$?="Canal? (con #)" des AKICK
+  ...SET
+  ....Cambiar SET:.msg CHaN levels $$?="Canal? (con #)" set SET $$?="Level nuevo?"
+  ....Desactivar SET:.msg CHaN levels $$?="Canal? (con #)" des SET
+  ...CLEAR
+  ....Cambiar CLEAR:.msg CHaN levels $$?="Canal? (con #)" set CLEAR $$?="Level nuevo?"
+  ....Desactivar CLEAR:.msg CHaN levels $$?="Canal? (con #)" des CLEAR
+  ...UNBAN
+  ....Cambiar UNBAN:.msg CHaN levels $$?="Canal? (con #)" set UNBAN $$?="Level nuevo?"
+  ....Desactivar UNBAN:.msg CHaN levels $$?="Canal? (con #)" des UNBAN
+  ...OPDEOP
+  ....Cambiar OPDEOP:.msg CHaN levels $$?="Canal? (con #)" set OPDEOP $$?="Level nuevo?"
+  ....Desactivar OPDEOP:.msg CHaN levels $$?="Canal? (con #)" des OPDEOP
+  ...ACC-LIST
+  ....Cambiar ACC-LIST:.msg CHaN levels $$?="Canal? (con #)"  set ACC-LIST $$?="Level nuevo?"
+  ....Desactivar ACC-LIST:.msg CHaN levels $$?="Canal? (con #)" des ACC-LIST 
+  ...ACC-CHANGE
+  ....Cambiar ACC-CHANGE:.msg CHaN levels $$?="Canal? (con #)"  set ACC-CHANGE $$?="Level nuevo?"
+  ....Desactivar ACC-CHANGE:.msg CHaN levels $$?="Canal? (con #)" des ACC-CHANGE
+  ...INVITE
+  ....Cambiar INVITE:.msg CHaN levels $$?="Canal? (con #)" set INVITE $$?="Level nuevo?"
+  ....Desactivar INVITE:.msg CHaN levels $$?="Canal? (con #)" des INVITE
+  ..-
+  ..Control
+  ...Dar Op:.msg CHaN op $$?="Canal? (con #)" $$?="Nick a dar op?"
+  ...Quitar Op:.msg CHaN deop $$?="Canal? (con #)" $$?="Nick a quitar op?"
+  .NiCK
+  ..Identificar nick:.msg NiCK@deep.space $iif(gra2.com isin $server,pass,$iif(irc-hispano.org isin $server,identify)) $$?="Password?"
+  ..Registrar nick:.msg NiCK@deep.space register $$?="tu e-mail?"
+  ..-
+  ..Protección Kill 1 min:.msg NiCK@deep.space set kill on
+  ..Protección Kill 20 secs:.msg NiCK@deep.space set kill quick
+  ..Protección Kill OFF:.msg NiCK@deep.space set kill off
+  ..-
+  ..Cambiar clave:.msg NiCK@deep.space set password $$?="tu nueva password?"
+  ..Recupera nick:.msg NiCK@deep.space recover $$?="Nick?" $$?="Pass?"
+  .MeMo
+  ..Enviar mensaje:.msg MeMo send $$?="Enviar a?" $$?="Mensaje a enviar?"
+  ..Listar mensajes:.msg MeMo List
+  ..Listar nuevos:.msg MeMo List new
+  ..Leer un mensaje:.msg MeMo read $$?="Numero de mensaje a leer? (Listalos para ver el numero)"
+  ..Leer ultimo:.msg MeMo read last
+  ..Eliminar mensaje:.msg MeMo del Numero de mensaje a borrar? (Listalos para ver el numero)"
+  ..Eliminar todos: .msg MeMo del ALL
+  .CReG
+  ..Registro canal:if ($$?!="Necesitarás buscar 24 apoyos en menos de 7 días... además necesitas tener registrado el nick, Continuar?" == $true) { set %cregtemp2 $$?="Canal a registrar? (con #)" | set %cregtemp3 $$?*="Escriba password de fundador" | set %cregtemp4 $$?="Introduzca una pequeña descripcion del canal" | .msg creg registra %cregtemp2 %cregtemp3 %cregtemp4 | unset %cregtemp* }
+  ..Apoya canal:.msg creg apoya $$?="Canal? (con #)" | echo -s 6Sigue las instrucciones del bot.
+  ..Ver los apoyos de tu canal:.msg creg apoyos $$?="Canal? (con #)"
+  ..Ver los apoyos que has dado:.msg creg apoyos $me
+  .Ayuda CHaN:.msg CHaN help
+  .Ayuda NiCK:.msg NiCK@deep.space help
+  .Ayuda MEMO:.msg MeMo help
+  .Ayuda CReG:.msg CReG ayuda
+  -
+}
+menu nicklist {
+  -
+  $iif(irc-hispano.org isin $server,Bots)
+  .Dar Op:.msg CHaN op # $$1 $2-
+  .Quitar Op:.msg CHaN deop # $$1 $2-
+  .Registro
+  ..Registrar a 50:.msg CHaN access # add $$1 50
+  ..Registrar a 100:.msg CHaN access # add $$1 100
+  ..Registrar a 200:.msg CHaN access # add $$1 200
+  ..Registrar a 300:.msg CHaN access # add $$1 300
+  ..Registrar a 400:.msg CHaN access # add $$1 400
+  ..Registrar a 450:.msg CHaN access # add $$1 450
+  ..Registrar a 498:.msg CHaN access # add $$1 498
+  ..Registrar a 499:.msg CHaN access # add $$1 499
+  ..Registrar con otro nivel...:.msg CHaN access # add $$1 $$?="Nivel?"
+  ..Ver su nivel:.msg CHaN access # list $$1
+  ..-
+  ..Borrar del registro
+  ...Confirmar?:.msg CHaN access # del $$1
+  .Akick
+  ..Añadir a akick:.msg CHaN akick # add $$1 $$?="Motivo?"
+  ..Listar akicks:.msg CHaN akick # list
+  ..Quitar de akick:.msg CHaN akick # del $$?="Numero de akick? (listar para ver)"
+  .-
+  .Recupera nick:.msg NiCK recover $$1 $$?="Pass?"
+  -
+}
+menu channel {
+  -
+  $iif(irc-hispano.org isin $server,Bots)
+  .Identificarse como Fundador:.msg CHaN identify # $$?="Pass de founder?"
+  .Cambiar Fundador:.msg CHaN set # founder $$?="Nuevo fundador?"
+  .-
+  .Opciones de canal
+  ..Mensaje Bienvenida:.msg CHaN set # entrymsg $$?="Mensaje de Bienvenida?"
+  ..Fijar Modos:.msg CHaN set # mlock $$?="Modos? (+/- ntilkpsm) (aconsejado modo +nt-ilkps)"
+  ..Topic
+  ...Poner Topic:.msg CHaN set # topic $$?="Topic?"
+  ...-
+  ...Fijar topic:.msg CHaN set # topiclock on
+  ...Desfijar topic:.msg CHaN set # topiclock off
+  ..Ops solo registrados
+  ...Encender:.msg CHaN set # secureops on
+  ...Apagar:.msg CHaN set # secureops off
+  ..Entran solos registrados
+  ...Encender:.msg CHaN set # secure on
+  ...Apagar:.msg CHaN set # secure off
+  ..-
+  ..Levels
+  ...Listar:.msg CHaN levels # list
+  ...AUTOOP
+  ....Cambiar AUTOOP:.msg CHaN levels # set AUTOOP $$?="level nuevo?"
+  ....Desactivar AUTOOP:.msg CHaN levels # des AUTOOP
+  ...AUTOVOICE
+  ....Cambiar AUTOVOICE:.msg CHaN levels # set AUTOVOICE $$?="Level nuevo?"
+  ....Desactivar AUTOVOICE:.msg CHaN levels # des AUTOVOICE
+  ...AUTODEOP
+  ....Cambiar AUTODEOP:.msg CHaN levels # set AUTODEOP $$?="level nuevo? (recomendado -1)"
+  ....Desactivar AUTODEOP:.msg CHaN levels # des AUTODEOP
+  ...NOJOIN
+  ....Cambiar NOJOIN:.msg CHaN levels # set NOJOIN $$?="Level nuevo? (recomendado -1 )"
+  ....Desactivar NOJOIN:.msg CHaN levels # des NOJOIN
+  ...AKICK
+  ....Cambiar AKICK:.msg CHaN levels # set AKICK $$?="Level nuevo?"
+  ....Desactivar AKICK:.msg CHaN levels # des AKICK
+  ...SET
+  ....Cambiar SET:.msg CHaN levels # set SET $$?="Level nuevo?"
+  ....Desactivar SET:.msg CHaN levels # des SET
+  ...CLEAR
+  ....Cambiar CLEAR:.msg CHaN levels # set CLEAR $$?="Level nuevo?"
+  ....Desactivar CLEAR:.msg CHaN levels # des CLEAR
+  ...UNBAN
+  ....Cambiar UNBAN:.msg CHaN levels # set UNBAN $$?="Level nuevo?"
+  ....Desactivar UNBAN:.msg CHaN levels # des UNBAN
+  ...OPDEOP
+  ....Cambiar OPDEOP:.msg CHaN levels # set OPDEOP $$?="Level nuevo?"
+  ....Desactivar OPDEOP:.msg CHaN levels # des OPDEOP
+  ...ACC-LIST
+  ....Cambiar ACC-LIST:.msg CHaN levels # set ACC-LIST $$?="Level nuevo?"
+  ....Desactivar ACC-LIST:.msg CHaN levels # des ACC-LIST off
+  ...ACC-CHANGE
+  ....Cambiar ACC-CHANGE:.msg CHaN levels # set ACC-CHANGE $$?="Level nuevo?"
+  ....Desactivar ACC-CHANGE:.msg CHaN levels # des ACC-CHANGE
+  ...INVITE
+  ....Cambiar INVITE:.msg CHaN levels # set INVITE $$?="Level nuevo?"
+  ....Desactivar INVITE:.msg CHaN levels # des INVITE off
+  .Registros
+  ..Listar registrados:.msg CHaN access # list
+  ..Registrar a alguien
+  ...Registrar a 50:.msg CHaN access # add $$?="Nick?" 50
+  ...Registrar a 100:.msg CHaN access # add $$?="Nick?" 100
+  ...Registrar a 200:.msg CHaN access # add $$?="Nick?" 200
+  ...Registrar a 300:.msg CHaN access # add $$?="Nick?" 300
+  ...Registrar a 400:.msg CHaN access # add $$?="Nick?" 400
+  ...Registrar a 450:.msg CHaN access # add $$?="Nick?" 450
+  ...Registrar a 498:.msg CHaN access # add $$?="Nick?" 498
+  ...Registrar a 499:.msg CHaN access # add $$?="Nick?" 499
+  ...Registrar con otro nivel...:.msg CHaN access # add $$?="Nick?" $$?="Nivel?"
+  ..Borrar del registro a alguien:.msg CHaN access # del $$?="Su nick?"
+  .Akicks
+  ..Poner akick:.msg CHaN akick # add $$?="Su nick?" $?="Motivo?"
+  ..Quitar akick:.msg CHaN akick # del $$?="Numero de akick o nick?" 
+  -
+}
+
+on ^+100:OPEN:?:*:{ 
+  if (irc-hispano.org isin $server) { 
+    if ($nick = NiCK) { 
+      echo 2 -s 4,4 2,3--  $+ $nick $+ --4,4  $1- 
+      if (%hnickdat isin $1-) {
+        if ((%hispanick = $me) && (%hispapass)  && (%autoidenth = si)) { _.hid } 
+        if ((%hispanick2 = $me) && (%hispapass2) && (%autoidenth2 = si)) { _.hid dos } 
+        if ((%hispanick3 = $me) && (%hispapass3)  && (%autoidenth3 = si)) { _.hid tres } 
+        if ((%hispanick4 = $me) && (%hispapass4)  && (%autoidenth4 = si)) { _.hid cuatro } 
+        if ((%hispanick5 = $me) && (%hispapass5)  && (%autoidenth5 = si)) { _.hid cinco } 
+      }
+      halt 
+    } 
+    if ($nick = CHaN) || ($nick = MeMo) || ($nick = oPeR) || ($nick = CReG) { 
+      echo 2 -s 4,4 2,3--  $+ $nick $+ --4,4  $1- 
+      halt 
+    } 
+    if ($nick = GLoBaL) { if (!$window(@Globales).state) { 
+        echo 2 -s 4,4 2,3--  $+ $nick $+ --4,4  Global: $1- 
+        halt
+      } 
+      else { 
+        echo @Globales 4,4 2,3--  $+ $nick $+ --4,4  $1- 
+        halt
+      } 
+    } 
+  }
+}
+on ^100:NOTICE:*:*:echo 2 -s 4,4 3,2--  $+ $nick $+ -- # 4,4  $1- | halt

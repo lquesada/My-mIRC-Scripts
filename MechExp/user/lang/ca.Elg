@@ -1,0 +1,588 @@
+248
+Respondre CTCP VERSION amb:
+236
+Veure el teu nick quan escrius
+224
+Modes de canal per defecte:
+212
+Actualitzacions en
+200
+URL's
+172
+NOTIFY
+160
+Canvies els teus modes a
+156
+Iniciant sessió
+144
+conectat desde
+128
+Tancar
+3
+útils
+dir
+ca
+249
+Configuració general
+237
+Mesurar el lag cada
+225
+Nombre de privats simultanis atmesos:
+213
+Segur que et vols desconectar?
+201
+IAL actualitzada correctament en
+173
+entra a l'IRC!
+161
+Procesant
+157
+Iniciant sessió amb
+145
+IP virtual
+129
+Sockets:
+4
+Carpeta de l'usuari
+258
+El servidor local té
+234
+A l'estado
+226
+Avisar quant et criden
+210
+PRIVAT
+202
+Fí de who
+170
+te dona op a
+162
+Red
+154
+Autoajustar majuscules
+146
+resposta
+138
+ets OPERador de la red
+5
+Carpeta de descarregues
+259
+clients i
+235
+Actualitzar ial quan entres a un canal
+227
+A finestra activa
+211
+-
+203
+Fí del llistat de nicks
+171
+te lleva op a
+163
+Reds
+155
+per
+147
+t'ha obert un privat
+139
+conectat a
+6
+Carpeta logs
+268
+Lector de logs
+232
+Mostrar notify
+220
+Quin nick vols emplear?
+216
+Segur?
+204
+IAL actualizada parcialment en
+176
+Motiu fitxe
+164
+La página d'aquesta red -ja- no existeix
+152
+Intentant resoldre
+140
+dur sense escriure
+108
+Parámetres inválits (/telnet ip port)
+7
+Has entrat a
+269
+Utilitza aquest lector per veure les conversacions que has tengut desde l'script.
+233
+A la finestra activa
+221
+Desconectar
+217
+Activar ausència
+205
+Who incomplet! Fes una petició més específica!
+177
+Motiu
+165
+Conectar
+153
+Resolguent
+141
+ha conectat a:
+109
+Tancada la conexió amb
+8
+ENTRA
+278
+Administra la llista dels canals als que entrarás automáticamente quan te conectis.
+230
+A privats
+222
+Conectar
+214
+Sí
+206
+No hi ha necessitat d'actualitzar l'IAL
+174
+surt de l'IRC!
+166
+Web completion
+150
+Emplea els modes
+142
+Fí de whois
+118
+Desconectar
+9
+SURT
+279
+Nicks a
+231
+A l'Estat
+223
+Modes/bans
+215
+No
+207
+te kicketja de
+175
+Demanar motiu
+167
+Emplea això per autocolorear cada URL (direcció web) que diguis.
+151
+No existeix
+143
+està a
+119
+Enviar linea en blanc
+adv
+[mech exp] &v necessita mIRC &m
+92
+Servidor
+80
+Utilitza les tecles "F" i les seves combinacions amb Control i Shift per ejecutar comands més rápidament.
+93
+Hora
+81
+Kick divertit
+90
+Tornar
+82
+Ban+Kick divertit
+91
+Descarraga completa!
+83
+Acudit
+96
+Principal
+84
+Testejar
+97
+Usuaris
+85
+Nick completion
+94
+Canals
+86
+El nick completion serveix per coloretjar els nicks que dius quan estàs a un canal, és molt fàcil configurar-ho!
+95
+Generat per
+87
+A l'atzar
+88
+Demana:
+89
+La página del canal -ja- no existeix
+98
+Informació de
+99
+Modes
+288
+t'ha convidat a
+196
+Amb l'away automátic (away idle) pots configurar l'script per a que activi el mode away automáticament quan no estiguis atenguent.
+184
+Utilitza /fnt +/-N on N es opcional. (exemple: /fnt +2)
+289
+Banetjar IP
+197
+Anunciar
+185
+Tamany de la font
+194
+(si no atens a cap conexió, te pones away a totes)
+186
+Predefineix aquí els tamanys de font de l'script.
+48
+Canvia l'aspecte exterior de l'script carregant themes!
+36
+Afegir
+24
+Llevar Halfop (%)
+12
+ha canviat el nick a
+195
+minuts
+187
+Away automátic
+49
+Carregar
+37
+Borrar
+25
+Donar veu (+)
+13
+posa mode
+192
+Tractar multiconexions:
+180
+No hi soc
+58
+Reemplaçador automàtic de texts, útil per no haver que coloretjar certes paraules quan les escrius, o per fer completions personalitzats per a cada nick.
+34
+Actiu
+26
+Carregant controls HalfOp
+10
+TANCA
+193
+(si no atens a una conexió, te poses away a ella)
+181
+Anunciar away
+59
+-
+35
+Máscara
+27
+camvia el Topic a
+11
+, has caviat el nick a
+190
+Individualment
+182
+¿Motiu de l'away?
+68
+té el nick registrat.
+32
+TOPIC
+20
+Control
+16
+Introdueix el teu nick:
+191
+Unificades
+183
+Font modificada en:
+69
+Afegir ignore
+33
+Posat per
+21
+Donar op (@)
+17
+El nick
+280
+Modes a
+78
+Comant
+30
+KICK
+22
+Llevar op (@)
+14
+MODE
+281
+cread el
+79
+Canviar
+31
+Llevar veu (+)
+23
+Donar Halfop (%)
+15
+NICK
+282
+Servidor inexistent
+76
+Chat
+64
+Ban+kick
+52
+Selector de sons
+40
+Ajuda de
+283
+Usuaris visibles:
+77
+Combinació
+65
+¿Motiu del kick?
+53
+Sons
+41
+La Shit List es la llista ideal per a enemics, escriu les seves másqueres en format nick!mask@host i quan entrin a un canal on tenguis op els faràs fora automàticament.
+284
+Usuaris invisibles:
+188
+Autoactivar away en:
+74
+Privat
+66
+Kicketjar
+50
+Tecles Ràpides
+42
+Panel de control
+18
+s'està empleant
+285
+Total:
+189
+Amb el motivo:
+75
+Envii
+67
+DesBanetjar
+51
+Idioma
+43
+Shit List
+19
+Canviant el nick a l'atzar
+286
+Servidors:
+198
+No estic atent...
+72
+Afegir en el notify
+60
+
+56
+per
+44
+Selector d'idiomas
+28
+kickea a
+287
+ha convidat a
+199
+Canals
+73
+Llevar del notify
+61
+Reemplaçar
+57
+Reemplaçador
+45
+Canvia l'idioma de l'script.
+29
+t'ha kicketjat
+276
+DESBANETJATS
+264
+Usuaris globals:
+252
+Configura desde aquí els aspectes de l'script que no poseixen secció propia.
+240
+Admetre 1 DCC CHAT cada
+208
+Protegit empleant
+168
+Afegir abans de cada url:
+132
+Temps:
+120
+Envii binari
+116
+No conectat
+104
+Obert STTP en el port
+70
+Llevar ignore
+62
+Per
+54
+Canvia el paquet de sons de l'escript fent així que semblin totalment distints
+46
+Selector de themes
+38
+Aceptar
+277
+Autojoin
+265
+Comand desconegut:
+253
+Missatge del dia de
+241
+Admetre 1 DCC SEND cada
+209
+No estás conectat
+169
+Previsualització:
+133
+Aturar
+121
+Netetjar pantalla
+117
+Nova conexió
+105
+Tancat STTP
+71
+-
+63
+Banetjar
+55
+Canvis
+47
+Autor
+39
+Cancelar
+274
+Logs llistats.
+266
+Modificador de versions
+250
+Publicitat
+242
+Admetre 1 privado cada
+218
+Desactivar ausència
+178
+Sistema de away
+130
+Estat
+122
+El port elegit está ocupat, eligeix unaltre
+114
+Conexió perduda
+106
+STTP obrirá un servidor HTTP a la teva máquina ( http://tu.host:port/ ) a través del qual la gent podrá obtenir informació dels canals on estàs.
+275
+BANETJAS
+267
+Modifica desde aquí la resposta al CTCP VERSION de l'script.
+251
+Modifica desde aquí els aspectes per defecte del theme.
+243
+Ignorar CTCP's
+219
+Canviar nick
+179
+Configura aquí el teu sistema de away (perque sapiguen quan no hi ets).
+131
+Descripció
+123
+Scanner de ports
+115
+No estás conectat!
+107
+Panel de Utilitats
+272
+Cargar log
+260
+servidors
+256
+conexions desconegudes
+244
+Ignorar DCC CHAT's
+228
+A l'Estat
+148
+Autoaceptar DCCs
+136
+Comprova els ports TCP oberts a qualsevol IP.
+124
+Per defecte
+112
+SockTelnet
+100
+STTP
+273
+Llistant logs. Espera, siusplau.
+261
+No hi ha MOTD
+257
+canals a la red
+245
+Ignorar notices
+229
+Veure away
+149
+Amb aquest utilitat podràs definir que els enviïs de DCC de certs nicks o masks siguin AUTOMÀTICAMENT aceptats - emplear amb precaució -
+137
+estas away
+125
+Ports:
+113
+Client de SockTelnet amb el que podràs fer "coses entretingudes" i aprendre molt de la red
+101
+Configuració
+0
+Català
+270
+Llistar de nou
+262
+Usuaris locals:
+254
+Fí del missatge del día
+246
+Ignorar privats
+238
+Publicitat a els quits
+158
+Canals comuns
+134
+Obert
+126
+Iniciar
+110
+Intentannt conectar amb
+102
+Port:
+1
+inicialitzat correctament
+author
+K2- (telanos@hotmail.com)
+d
+ca
+271
+No hi ha logs!
+263
+Máxim:
+255
+operadors conectats
+247
+Ignorar DCC SEND's
+239
+Modificador del theme
+159
+Canals comuns amb
+135
+Tancat
+127
+Netetjar
+111
+Conexió establesa amb
+103
+Conexions máximes
+2
+tancant

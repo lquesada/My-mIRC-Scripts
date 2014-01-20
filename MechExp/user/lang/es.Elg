@@ -1,0 +1,588 @@
+248
+Responder CTCP VERSION con:
+236
+Ver tu nick al escribir
+224
+Modos de canal por defecto:
+212
+Actualizaciones en
+200
+URL's
+172
+NOTIFY
+160
+Cambias tus modos a
+156
+Iniciando sesión
+144
+conecta desde
+128
+Cerrar
+3
+Utiles
+dir
+es
+249
+Configuración general
+237
+Medir el lag cada
+225
+Número de privados simultaneos admitidos:
+213
+Seguro que quieres desconectar?
+201
+IAL actualizada correctamente en
+173
+entra al IRC!
+161
+Procesando
+157
+Iniciando sesión con
+145
+IP virtual
+129
+Sockets:
+4
+Carpeta user
+258
+El servidor local tiene
+234
+En estado
+226
+Avisar cuando te llaman
+210
+PRIVADO
+202
+Fin de who
+170
+te da op en
+162
+Red
+154
+Autoajustar mayúsculas
+146
+respuesta
+138
+es OPERador de la red
+5
+Carpeta descargas
+259
+clientes y
+235
+Actualizar ial al entrar a un canal
+227
+En ventana activa
+211
+-
+203
+Fin de listado de nicks
+171
+te quita op en
+163
+Redes
+155
+por
+147
+te ha abierto privado
+139
+conectado a
+6
+Carpeta logs
+268
+Lector de logs
+232
+Mostrar notify
+220
+¿Qué nick deseas usar?
+216
+¿Seguro?
+204
+IAL actualizada parcialmente en
+176
+Motivo fijo
+164
+La página de esa red -ya- no existe
+152
+Intentando resolver
+140
+lleva sin escribir
+108
+Parámetros inválidos (/telnet ip puerto)
+7
+Has entrado a
+269
+Utiliza este lector para ver las conversaciones que has tenido desde el script.
+233
+En ventana activa
+221
+Desconectar
+217
+Activar ausencia
+205
+Who incompleto! Haga una petición más específica!
+177
+Motivo
+165
+Conectar
+153
+Resolviendo
+141
+conectó en
+109
+Cerrada conexión con
+8
+ENTRA
+278
+Administre la lista de los canales a los que se entrará automáticamente al conectar.
+230
+En privados
+222
+Conectar
+214
+Sí
+206
+No hay necesidad de actualizar la IAL
+174
+sale del IRC!
+166
+Web completion
+150
+Usa los modos
+142
+Fin de whois
+118
+Desconectar
+9
+SALE
+279
+Nicks en
+231
+En estado
+223
+Modos/bans
+215
+No
+207
+te kickea de
+175
+Preguntar motivo
+167
+Usa esto para autocolorear cada URL (dirección de web) que digas.
+151
+No existe
+143
+está en
+119
+Enviar linea en blanco
+adv
+[mech exp] &v necesita mIRC &m
+92
+Servidor
+80
+Utiliza las teclas "F" y sus combinaciones con Control y Shift para ejecutar comandos más rápidamente.
+93
+Hora
+81
+Kick divertido
+90
+Volver
+82
+Ban+Kick divertido
+91
+Descarga completa!
+83
+Chiste
+96
+Principal
+84
+Testear
+97
+Usuarios
+85
+Nick completion
+94
+Canales
+86
+El nick completion sirve para colorear los nicks que nombras cuando estás en un canal, es muy facil configurarlo!
+95
+Generado por
+87
+Al azar
+88
+Pide:
+89
+La página del canal -ya- no existe
+98
+Información de
+99
+Modos
+288
+te ha invitado a
+196
+Con el away automático (away idle) puedes configurar el script para que active el modo away automáticamente cuando no estés atendiendo.
+184
+Utilice /fnt +/-N donde N es opcional. (ejemplo: /fnt +2)
+289
+Banear IP
+197
+Anunciar
+185
+Tamaños de fuente
+194
+(si no atiendes a ninguna conexión, te pones away en todas)
+186
+Predefine aquí los tamaños de fuente del script.
+48
+Cambia el aspecto exterior del script cargando algún theme!
+36
+Añadir
+24
+Quitar Halfop (%)
+12
+ha cambiado el nick a
+195
+minutos
+187
+Away automático
+49
+Cargar
+37
+Borrar
+25
+Dar voz (+)
+13
+pone modo
+192
+Tratar multiconexiones:
+180
+No estoy
+58
+Reemplazador automático de textos, util para no tener que colorear ciertas palabras al decirlas, o para hacer completions personalizados para cada nick.
+34
+Activo
+26
+Cargando controles HalfOp
+10
+CIERRA
+193
+(si no atiendes a una conexión, te pones away en ella)
+181
+Anunciar away
+59
+-
+35
+Máscaras
+27
+cambia topic a
+11
+, has cambiado el nick a
+190
+Individualmente
+182
+¿Motivo del away?
+68
+tiene el nick registrado.
+32
+TOPIC
+20
+Control
+16
+Introduce tu nick:
+191
+Unificadas
+183
+Fuente modificada en:
+69
+Añadir ignore
+33
+Puesto por
+21
+Dar op (@)
+17
+El nick
+280
+Modos de
+78
+Comando
+30
+KICK
+22
+Quitar op (@)
+14
+MODO
+281
+creado en
+79
+Cambiar
+31
+Quitar voz (+)
+23
+Dar Halfop (%)
+15
+NICK
+282
+Servidor inexistente
+76
+Chat
+64
+Ban+kick
+52
+Selector de sonidos
+40
+Ayuda de
+283
+Usuarios visibles:
+77
+Combinación
+65
+¿Motivo del kick?
+53
+Sonidos
+41
+La Shit List es la lista ideal de enemigos, incluye ahí sus máscaras en formato nick!mask@host y cuando entren a un canal en el que tengas op los echarás automáticamente.
+284
+Usuarios invisibles:
+188
+Autoactivar away en:
+74
+Privado
+66
+Kickear
+50
+Teclas Rápidas
+42
+Panel de control
+18
+está siendo usado
+285
+Total:
+189
+Con el motivo:
+75
+Envío
+67
+Unban
+51
+Idioma
+43
+Shit List
+19
+Cambiando nick al azar
+286
+Servidores:
+198
+No estoy atento...
+72
+Añadir en notify
+60
+
+56
+por
+44
+Selector de idiomas
+28
+kickea a
+287
+ha sido invitado a
+199
+Canales
+73
+Quitar de notify
+61
+Reemplazar
+57
+Reemplazador
+45
+Cambia el idioma del script.
+29
+te kickea
+276
+DESBANEADOS
+264
+Usuarios globales:
+252
+Configura desde aquí los aspectos del script que no poseen sección propia.
+240
+Admitir 1 DCC CHAT cada
+208
+Protegido usando
+168
+Añadir antes de cada url:
+132
+Tiempo:
+120
+Envío binario
+116
+No conectado
+104
+Abierto STTP en puerto
+70
+Quitar ignore
+62
+Por
+54
+Cambia el paquete de sonidos del script para que parezca totalmente diferente!
+46
+Selector de themes
+38
+Aceptar
+277
+Autojoin
+265
+Comando desconocido:
+253
+Mensaje del día de
+241
+Admitir 1 DCC SEND cada
+209
+No estás conectado
+169
+Previsualización:
+133
+Parar
+121
+Limpiar pantalla
+117
+Nueva conexión
+105
+Cerrado STTP
+71
+-
+63
+Banear
+55
+Cambios
+47
+Autor
+39
+Cancelar
+274
+Logs listados.
+266
+Modificador de versiones
+250
+Publicidad
+242
+Admitir 1 privado cada
+218
+Desactivar ausencia
+178
+Sistema de away
+130
+Estado
+122
+El puerto elegido está ocupado, elija otro
+114
+Conexión perdida
+106
+STTP abrirá un servidor HTTP en tu máquina ( http://tu.host:puerto/ ) a través del cual la gente podrá obtener información de los canales en los que estás.
+275
+BANEADOS
+267
+Modifica desde aquí la respuesta al CTCP VERSION del script.
+251
+Modifica desde aquí los aspectos por defecto del theme.
+243
+Ignorar CTCP's
+219
+Cambiar nick
+179
+Configura aquí tu sistema de away (para que sepan cuando no estás).
+131
+Descripción
+123
+Scanner de puertos
+115
+No estás conectado!
+107
+Panel de Utilidades
+272
+Cargar log
+260
+servidores
+256
+conexiones desconocidas
+244
+Ignorar DCC CHAT's
+228
+En estado
+148
+Autoaceptar DCCs
+136
+Comprueba los puertos TCP abiertos en cualquier IP.
+124
+Por defecto
+112
+SockTelnet
+100
+STTP
+273
+Listando logs. Espere, por favor.
+261
+No hay MOTD
+257
+canales en la red
+245
+Ignorar notices
+229
+Ver away
+149
+Con esta utilidad podrás definir que los envíos DCC de ciertos nicks o masks sean AUTOMÁTICAMENTE aceptados -usar con precaución-.
+137
+está away
+125
+Puertos:
+113
+Cliente de SockTelnet con el que puedes hacer "cosas entretenidas" y aprender mucho de la red
+101
+Configuración
+0
+Español
+270
+Listar de nuevo
+262
+Usuarios locales:
+254
+Fin del mensaje del día
+246
+Ignorar privados
+238
+Publicidad en los quits
+158
+Canales comunes
+134
+Abierto
+126
+Iniciar
+110
+Intentando conectar con
+102
+Puerto:
+1
+inicializado correctamente
+author
+LZ
+d
+es
+271
+No hay logs!
+263
+Máximo:
+255
+operadores conectados
+247
+Ignorar DCC SEND's
+239
+Modificador del theme
+159
+Canales comunes con
+135
+Cerrado
+127
+Limpiar
+111
+Conexión establecida con
+103
+Conexiones máximas
+2
+cerrando

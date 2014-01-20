@@ -1,0 +1,13 @@
+[skin]
+Autor=El autor
+Version=version de la skin (Default: 0.1)
+inferior=Barra donde se muestran los canales
+superior=Barra de los iconos de mIRC
+normal=barra de Gra2 Script (Desconectado o en red desconocida)
+gra2=barra de Gra2 Script en las otras redes
+hispano=barra de Gra2 Script en Hispano
+MemMon=monitor de memoria
+tile=Gráfico repetido en la barra en mayores resoluciones
+over=Gráfico sobre según que botones de la barra
+fondo=gráfico de fondo
+estilofondo=parámetros del fondo

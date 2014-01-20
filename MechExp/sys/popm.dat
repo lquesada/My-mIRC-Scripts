@@ -1,0 +1,8 @@
+$iif($status != disconnected,$ø(221),$ø(222)):if ($status != disconnected) disconnect | else server
+-
+$ø(219):nick $$ninput
+$iif($_ret(awstt. $+ $cid) == 1,$ø(218),$ø(217)):_butaway
+-
+$iif($status != disconnected,$ø(250)):amsg Mech Exp $_v for mIRC $+ $_vm - $_w
+-
+;// EOF

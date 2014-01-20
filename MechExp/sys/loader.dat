@@ -1,0 +1,44 @@
+;[Mech Exp] by LZ
+
+;// Loader:
+on *:START:{
+  if ((!$_devel) && (!$_script)) {
+    _reload
+  }
+  _mech_exp_start
+  var %d = $findfile(temp,*.stp,0,0,.remove $shortfn($1-))
+}
+on *:EXIT:{
+  _snotf
+  if ($hget(sounds,e)) .splay $+(",$mircdir,user\sounds\,$hget(sounds,dir),\,$hget(sounds,e),")
+  echo $color(normal) -s $£(1) $hget(lang,2) $+ .
+  _saveall
+  var %d = $findfile(temp,*.stp,0,0,.remove $shortfn($1-))
+}
+
+;// Aux Functions:
+alias _htable if (!$hget($2)) hmake $2 $1 | else hdel -w $2 * | if ($isfile($3-)) hload $2-
+alias _snotf {
+  _htable 100 snotf
+  if (!$isfile(user\config\notify.Ecf)) write user\config\notify.Ecf
+  var %x 1
+  while (%x <= $notify(0)) {
+    hadd snotf %x $notify(%x) $iif(WAVE: isin $notify(%x).note,$notify(%x).note,$iif($notify(%x).sound,$notify(%x).note $+ WAVE: $+ $notify(%x).sound,$notify(%x).note))
+    inc %x
+  }
+  hsave -o snotf user\config\notify.Ecf
+}
+alias _saveall {
+  hsave -o cfg user\config\primary.Ecf
+  hsave -o shitlist user\config\shitlist.Ecf
+}
+alias _reload {
+  .load -rs sys\script1.dat
+  .load -a sys\alias1.dat
+  .load -rs sys\adds1.dat
+  _title
+}
+
+
+
+;// EOF

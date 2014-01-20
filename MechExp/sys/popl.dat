@@ -1,0 +1,48 @@
+$iif(($me isop #) && ($1),$ø(20) @)
+.$ø(21):_mode1 $modespl # + o $1-
+.$ø(22):_mode1 $modespl # - o $1-
+.-
+.$iif($_net(hop. $+ $cid),$ø(23)):_mode1 $modespl # + h $1-
+.$iif($_net(hop. $+ $cid),$ø(24)):_mode1 $modespl # - h $1-
+.-
+.$ø(25):_mode1 $modespl # + v $1-
+.$ø(31):_mode1 $modespl # - v $1-
+.-
+.$ø(63):_mode2 $modespl # - o + b $1-
+.$ø(289):_mode3 $modespl # + b $1-
+.$ø(64):set %kick $$dinput | _mode2 $modespl # - o + b $1- | _kic # $1-
+.$ø(66):set %kick $$dinput | _kic # $1-
+.-
+.$ø(81):set %kick $_kick | _kic # $1-
+.$ø(82):set %kick $_kick | _mode2 $modespl # - o + b $1- | _kic # $1-
+$iif(($_net(hop. $+ $cid)) && ($me !isop #) && ($me ishop #) && ($1),$ø(20) %)
+.$ø(25):_mode1 $modespl # + v $1-
+.$ø(31):_mode1 $modespl # - v $1-
+.-
+.$ø(63):_mode1 $modespl # + b $1-
+.$ø(289):_mode3 $modespl # + b $1-
+.$ø(64):set %kick $$dinput | _mode1 $modespl # + b $1- | _kic # $1-
+.$ø(66):set %kick $$dinput | _kic # $1-
+.-
+.$ø(81):set %kick $_kick | _kic # $1-
+.$ø(82):set %kick $_kick | _mode2 $modespl # - o + b $1- | _kic # $1-
+$iif(($$1 isignore) || ($$1 $+ !*@* isignore),$ø(70)):ignore -r $$1-
+$iif(($$1 !isignore) && ($$1 $+ !*@* !isignore),$ø(69)):ignore $$1
+$iif($$1 isnotify,$ø(73)):notify -r $$1-
+$iif($$1 !isnotify,$ø(72)):notify $$1
+-
+Whois:whois $$1
+Whois (Idle):whois $$1 $$1
+InfoCentral:uwho $$1
+$ø(74):query $$1
+-
+CTCP
+.Ping:ctcp $$1 ping
+.Finger:ctcp $$1 finger
+.Time:ctcp $$1 time
+.Version:ctcp $$1 version
+DCC
+.$ø(75):dcc send $$1
+.$ø(76):dcc chat $$1
+-
+;// EOF

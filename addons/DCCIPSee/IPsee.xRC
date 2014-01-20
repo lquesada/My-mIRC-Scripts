@@ -1,0 +1,25 @@
+#_.INFO off
+
+ /********************************************************************
+ *                            DCC IP see                             *
+ *                             LZ 2001                               *
+ ********************************************************************/
+
+ /********************************************************************
+ *                                                                   *
+ * This addons shows the IP of established DCC connections, aswell   *
+ * as DCC requests.
+ *                                                                   *
+ ********************************************************************/
+
+#_.INFO end
+
+alias -l _¶c return $colour(other)
+alias -l _¶d if (($2 != n/a) && ($2 != $null)) echo 4 -s [IPsee] IP de $1 $+ : $2
+on *:FILERCVD:*:_¶d $nick $send($nick).ip
+on *:SENDFAIL:*:_¶d $nick $send($nick).ip
+on *:FILESENT:*:_¶d $nick $send($nick).ip
+on *:GETFAIL:*:_¶d $nick $send($nick).ip
+on *:OPEN:=:_¶d $nick $chat($nick).ip
+ctcp ^*:DCC CHAT*:_¶d $nick $longip($4)
+ctcp ^*:DCC SEND*:_¶d $nick $longip($gettok($1-,$calc($0 -2),32))

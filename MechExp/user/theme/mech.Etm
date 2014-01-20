@@ -1,0 +1,336 @@
+3
+&t 4<12&r[1]&n4>
+fstatus.size
+9
+dir
+mech
+4
+&t [!] &c || &n >
+5
+&m
+color_ctcp
+4
+6
+&t [!] &n >
+i
+HH:nn
+flist.size
+9
+7
+&t &d&r[1]: &c 14<&m!&a[0]>
+fquery.size
+9
+8
+&t &d** [&r[1]] &n (&a[1]14@&d&a[2])
+fchannel
+Verdana
+color_invite
+3
+9
+&t &d** [&r[1]] &n (&a[1]14@&d&a[2]) -[ &r[2] &d]-
+coms.8
+429ÿ457ÿ5ÿ25ÿsendkey ALT u
+color_action
+6
+awaybut.x
+212
+167
+
+awaybut.y
+5
+color_Editbox
+0
+bar
+bar.jpg
+color_back
+15
+color_title
+15
+92
+&t &r[1] &r[2]: &r[3]
+80
+&t &d&r[1] &r[2]
+93
+&t &r[1] &r[2]: &r[3]
+81
+&t &r[2] &r[1]
+color_part
+6
+t
+1[&t]
+coms.0
+37ÿ65ÿ5ÿ25ÿserver -n
+90
+&t &r[4] &r[1] &r[5] &r[2] &r[3]
+82
+&t /&r[1]
+u
+4
+coms.1
+72ÿ100ÿ5ÿ25ÿsendkey ALT o
+91
+&t &r[1] &r[2]
+83
+&t &r[1]
+color_wallops
+12
+coms.2
+107ÿ135ÿ5ÿ25ÿsendkey ALT b
+96
+&t &r[1] &r[2]
+84
+&t &r[1]
+flist
+Verdana
+coms.3
+142ÿ170ÿ5ÿ25ÿsendkey ALT j
+97
+&t * &r[1] &r[3] &r[2]
+85
+&t &r[1] &r[2]
+coms.4
+177ÿ205ÿ5ÿ25ÿsendkey ALT l
+color_notify
+7
+94
+&t &r[2] &r[1]: &r[3]
+86
+&t &r[1] &r[2]
+coms.5
+212ÿ240ÿ5ÿ25ÿ_butaway
+95
+&t &r[1] (&r[2]).
+87
+&t &r[1] &r[2]
+color_join
+3
+coms.6
+359ÿ387ÿ5ÿ25ÿcpanel
+88
+&t &r[3] &r[1] &r[4] &r[2] &r[5]
+awayoff
+awybut1.jpg
+conoff
+conoff.jpg
+color_kick
+4
+coms.7
+394ÿ422ÿ5ÿ25ÿupanel
+89
+&t &r[1]
+98
+&t [*] &r[1] &r[3] &r[2]
+color_inactive
+15
+color_own
+5
+color_info
+2
+99
+&t &d** [&r[3]] &n &r[1] &r[2]
+color_Editbox_text
+1
+color_quit
+4
+color_normal
+1
+color_listbox_text
+15
+Raw
+del who, donde precolor whois:
+conon
+conon.jpg
+lagb
+250
+back.s
+p*statlogo.jpg
+48
+&t [&n &r[1] &r[3]] &r[2]
+36
+&t &d&r[1] &r[3]: &r[2]
+24
+&t -&n:&r[1]- &r[2]
+12
+&t 2> &r[1]
+lagc
+6
+49
+&t [&r[2]] &n (&a[0]) &r[1]
+37
+&t &d&r[1] &r[3]: &r[2]
+25
+&t -&n- &r[1]
+13
+&t &d&r[2] &r[1] &r[3].
+color_highlight
+4
+58
+&t [*] &r[1]
+34
+&t &d&r[1] &r[2] &r[3].
+26
+&t 1[ntc\&r[1]]: &r[2]
+10
+&t &d** [&r[3]] &n&r[1] &r[2]
+59
+&t [*] &r[2] &r[3]
+35
+&t &d&r[1] &r[2].
+27
+&t IP(&r[1]): &r[2]
+11
+&t ** [&r[4]] &n &r[1]: &r[2] &r[3]
+68
+&t [*] &r[1]
+32
+&t &d&r[1] &r[2]
+20
+&t 1[msg\&r[1]]: &r[2]
+16
+&t &d** [&r[4]] &n &r[1] &r[2]: &r[3]
+color_whois
+12
+69
+&t [*] &r[1]
+33
+&t &d&r[1] &r[2] &r[3].
+21
+&t 1[act\&r[1]]: &r[2]
+17
+&t &d** [&r[3]] &n &r[1]: &r[2]
+78
+&t [!] (&r[1]) &c || &n >
+30
+&t &d&r[1]3 &r[2]&d@03&r[3] &d* &r[4]
+22
+&t [*] &r[1] &r[2]
+14
+&t &d&r[1].
+fstatus
+Verdana
+79
+&t [!] (&r[1]) &n >
+31
+&t &d&r[1] &r[2] &r[3]: &r[4]
+23
+&t [*] &r[1] &r[2]
+15
+&t &d** [&r[3]] &n &r[1]: &r[2]
+76
+&t [&r[1]] &n &r[2] (&r[3]) &r[4]
+64
+&t [*] &r[1] (&r[2])
+52
+&t [*] &r[3]: &r[1] (&r[2])
+40
+&t &d&r[1] &r[2].
+77
+&t 2<4&m2> &r[1]
+65
+&t [&r[2]] &r[1]
+53
+&t [*] &n &r[1] &c
+41
+&t &d&r[2] &r[1].
+lagco.text
+13158600
+back.m
+t*fillback.jpg
+color_listbox
+1
+fill
+fill.jpg
+74
+&t [&r[1]] &n &r[2] &r[3]
+66
+&t &n &c (&m) &a[0] 4&s > &z
+50
+&t [*] &r[2] &n (&a[0])
+42
+&t &d&r[2]: &r[1]
+18
+&t &d&r[1]: &r[2]
+fchannel.size
+9
+75
+&t [&r[1]] &n &r[2] (&r[3]) &r[4]
+67
+&t [*] &r[1] &r[2]
+51
+&t [*] &r[2] &n (&r[4]): &r[3]
+43
+&t [&n:&r[1] &r[2]] &r[3]
+19
+&t &d&r[1] &r[2] (&r[3])
+coms.-1
+2ÿ30ÿ5ÿ25ÿconnection
+color_notice
+5
+72
+&t [&r[2]] &n (&a[0]) &r[1] (&r[3])
+60
+&t [*] &r[2] &r[5] (&r[4]): &r[3]
+56
+&t [&r[1]] &n &r[2]
+44
+&t [&n &r[1]] &r[2]
+28
+&t &d&r[1] &r[3]: &r[2]
+73
+&t [&r[1]] &n &r[2] &r[3]
+61
+&t [&r[1]] &n &r[2] (&r[3])
+57
+&t [*] &r[1] &r[2]
+45
+&t 1[ctcp\&r[1]]: &r[2] &r[3]
+29
+&t &d&r[1] &r[2].
+color_info2
+2
+70
+&t &d** [&r[3]] &n &r[1] &c: &r[2]
+62
+&t [&r[1]] &n &r[2] (&r[3])
+54
+&t [*] &n &r[1] &c
+46
+&t 1[ctcpreply\&r[1]]: &r[2] &r[3]
+38
+&t &d&r[1] &r[2]: &r[3]
+awayon
+awybut2.jpg
+fquery
+Verdana
+color_other
+14
+71
+&t [*] &r[1]
+63
+&t [*] &r[1] &r[2]
+55
+&t [&r[1]] &n &r[2]
+47
+&t [&n:&r[1] &r[2] &r[4]] &r[3]
+39
+&t &d&r[1] &r[2].
+color_grayed_text
+15
+cnick.me
+4
+color_nick
+5
+color_mode
+12
+0
+Gray mech
+color_topic
+12
+1
+[mech exp]
+lagco.border2
+8355711
+Author
+LZ
+2
+&t 4<12&r[1]2&n4>

@@ -1,0 +1,13 @@
+[&Mech Exp]
+$ø(42):cpanel
+$ø(107):upanel
+-
+$ø(199):sendkey ALT j
+$ø(200):sendkey ALT u
+-
+$ø(3)
+.$ø(4):run user
+.$ø(5):run user\download
+.$ø(6):run user\logs
+-
+;// EOF
