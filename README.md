@@ -2,7 +2,8 @@ My-mIRC-Scripts
 ===============
 
 My mIRC scripts from 1999-2003.  
-Copyright (c) 1999-2003, Luis Quesada - https://github.com/lquesada
+Copyright (c) 1999-2003, Luis Quesada Torres - https://github.com/lquesada | www.luisquesada.com
+
 
 Full scripts:
 
